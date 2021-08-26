@@ -1,0 +1,8 @@
+{
+  "short_name": "Snake Tron",
+  "name": "Snake Tron - Code Fights",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
