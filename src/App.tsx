@@ -1,24 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+
+import { Viewer } from "./viewer/Viewer";
+import { GameState } from "./engine/types";
+import { Game } from "./engine/game";
+import { RandomController } from "./sample-controllers/random";
 
 function App() {
+  const [history, setHistory] = useState([] as GameState[]);
+
+  useEffect(() => {
+    const r1 = new RandomController();
+    const r2 = new RandomController();
+    const game = new Game([r1, r2]);
+    setHistory(game.run());
+  }, [setHistory]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>🐍🏍️</h1>
+      {history.length > 0 && <Viewer states={history} />}
     </div>
   );
 }
