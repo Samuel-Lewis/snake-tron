@@ -3,6 +3,18 @@ export type GameOptions = {
   maxTicks: number;
 };
 
+export type GameHistory =
+  | {
+      error: false;
+      tickCount: number;
+      ticks: Omit<GameState, "meta">[];
+      winner: number;
+      gridSize: number;
+      playerCount: number;
+      gameId: string;
+    }
+  | { error: true; errorMessage: string };
+
 export type GameOptionsOptionals = {};
 
 export enum Move {
@@ -19,6 +31,7 @@ export type GameState = {
   positions: Array<Pos[]>;
   food: Pos[];
   playerAlive: boolean[];
+  lastMoves: Move[];
   meta: {
     gridSize: number;
     playerCount: number;
@@ -27,7 +40,6 @@ export type GameState = {
 };
 
 export interface Controller {
-  name?: string;
-  init: (state: GameState) => void;
+  init: (playerPos: number) => void;
   update: (state: GameState) => Move;
 }

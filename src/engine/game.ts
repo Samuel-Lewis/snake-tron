@@ -2,7 +2,12 @@ import { v4 as uuidv4 } from "uuid";
 import { cloneDeep } from "lodash";
 
 import { Controller, GameOptions, GameState, Pos, Move } from "./types";
-import { moveToVector2d, randomPos, withinBounds } from "./utils";
+import {
+  gameHistorySummarise,
+  moveToVector2d,
+  randomPos,
+  withinBounds,
+} from "./utils";
 
 const defaultOptions: GameOptions = {
   gridSize: 50,
@@ -22,15 +27,15 @@ export class Game {
   }
 
   public run() {
-    const stateHistory: GameState[] = [];
+    const allStates: GameState[] = [];
     while (
       this.gameState.playerAlive.filter((p) => p).length > 1 &&
       this.gameState.tick < this.options.maxTicks
     ) {
       const state = cloneDeep(this.update());
-      stateHistory.push(state);
+      allStates.push(state);
     }
-    return stateHistory;
+    return gameHistorySummarise(allStates);
   }
 
   private initControllers(gameState: GameState) {}
@@ -43,6 +48,7 @@ export class Game {
     const newState: GameState = {
       tick: 0,
       positions: [],
+      lastMoves: [],
       food: [],
       playerAlive: new Array(playerCount).fill(true),
       meta: {
@@ -91,6 +97,8 @@ export class Game {
         currentHead[0] + moveVec[0],
         currentHead[1] + moveVec[1],
       ] as Pos;
+
+      newState.lastMoves[player] = move;
 
       // Check bounds collision
       if (!withinBounds(newHead, newState.meta.gridSize)) {

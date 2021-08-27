@@ -1,4 +1,5 @@
-import { Pos, Move } from "./types";
+import { Pos, Move, GameState, GameHistory } from "./types";
+import { omit } from "lodash";
 
 export const randomPos = (bounds: number): Pos => {
   return [
@@ -19,4 +20,24 @@ export const moveToVector2d = (move: Move): [number, number] => {
 
 export const withinBounds = (pos: Pos, bounds: number): boolean => {
   return pos.every((p) => p >= 0 && p < bounds);
+};
+
+export const gameHistorySummarise = (history: GameState[]): GameHistory => {
+  if (history.length === 0) {
+    return {
+      error: true,
+      errorMessage: "No moves made",
+    };
+  }
+
+  const meta = history[0].meta;
+  const winner = history[history.length - 1].playerAlive.findIndex((p) => p);
+  const ticks = history.map((h) => omit(h, ["meta"]));
+  return {
+    ...meta,
+    tickCount: ticks.length,
+    ticks,
+    winner,
+    error: false,
+  };
 };

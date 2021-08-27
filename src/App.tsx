@@ -1,25 +1,37 @@
-import React, { useEffect, useState } from "react";
+import "antd/dist/antd.css";
 import "./App.css";
 
-import { Viewer } from "./viewer/Viewer";
-import { GameState } from "./engine/types";
-import { Game } from "./engine/game";
-import { RandomController } from "./sample-controllers/random";
+import { Layout } from "antd";
+import React from "react";
+import { Route, Switch } from "react-router-dom";
+
+import { GamePage } from "./pages/Game/Game";
+import { HomePage } from "./pages/Home";
+import { FooterPart } from "./pages/parts/Footer";
+import { HeaderPart } from "./pages/parts/Header";
+import { ContentPart } from "./pages/parts/Content";
+import { ViewerPage } from "./pages/Viewer";
 
 function App() {
-  const [history, setHistory] = useState([] as GameState[]);
-
-  useEffect(() => {
-    const r1 = new RandomController();
-    const r2 = new RandomController();
-    const game = new Game([r1, r2]);
-    setHistory(game.run());
-  }, [setHistory]);
-
   return (
     <div className="App">
-      <h1>🐍🏍️</h1>
-      {history.length > 0 && <Viewer states={history} />}
+      <Layout>
+        <HeaderPart />
+        <ContentPart>
+          <Switch>
+            <Route exact path="/">
+              <HomePage />
+            </Route>
+            <Route path="/game">
+              <GamePage />
+            </Route>
+            <Route path="/viewer">
+              <ViewerPage />
+            </Route>
+          </Switch>
+        </ContentPart>
+        <FooterPart />
+      </Layout>
     </div>
   );
 }
