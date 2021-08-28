@@ -8,14 +8,17 @@ export type SelectControllersProps = {
 };
 
 export const SelectControllers: React.FunctionComponent<SelectControllersProps> =
-  (props) => {
+  ({ onSubmit }) => {
     const [numControllers, setNumControllers] = useState(2);
 
-    const onFinish = useCallback((r) => {
-      if (props.onSubmit) {
-        props.onSubmit(Object.values(r));
-      }
-    }, []);
+    const onFinish = useCallback(
+      (r) => {
+        if (onSubmit) {
+          onSubmit(Object.values(r));
+        }
+      },
+      [onSubmit]
+    );
 
     const onNumChange = useCallback(
       (r) => {

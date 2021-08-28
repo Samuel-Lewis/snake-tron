@@ -1,8 +1,7 @@
-import { Layout, Menu, Typography } from "antd";
+import { Layout, Menu } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const { Title } = Typography;
 const { Header } = Layout;
 
 export const HeaderPart: React.FunctionComponent = () => {

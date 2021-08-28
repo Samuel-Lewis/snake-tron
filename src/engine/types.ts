@@ -38,8 +38,3 @@ export type GameState = {
     gameId: string;
   };
 };
-
-export interface Controller {
-  init: (playerPos: number) => void;
-  update: (state: GameState) => Move;
-}

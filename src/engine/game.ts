@@ -1,6 +1,7 @@
 import { cloneDeep } from "lodash";
 import { v4 as uuidv4 } from "uuid";
-import { Controller, GameOptions, GameState, Move, Pos } from "./types";
+import { Controller } from "../controller/types";
+import { GameOptions, GameState, Move, Pos } from "./types";
 import { gameHistorySummarise, moveToVector2d, randomPos, withinBounds } from "./utils";
 
 const defaultOptions: GameOptions = {
@@ -12,27 +13,46 @@ export class Game {
   controllers: Controller[];
   options: GameOptions;
   gameState: GameState;
+  controllersReady: boolean[];
 
   constructor(controllers: Controller[], options?: GameOptions) {
     this.controllers = controllers;
     this.options = { ...defaultOptions, ...options };
     this.gameState = this.initState(controllers, this.options);
-    this.initControllers(this.gameState);
+    this.controllersReady = new Array(controllers.length).fill(false);
   }
 
-  public run() {
+  public async initControllers() {
+    await Promise.all(
+      this.controllers.map(async (c, i) => {
+        await c.init({
+          playerNumber: i,
+          gameId: this.gameState.meta.gameId,
+          gridSize: this.gameState.meta.gridSize,
+          playerCount: this.gameState.meta.playerCount,
+        });
+        this.controllersReady[i] = true;
+      })
+    );
+  }
+
+  public async run() {
+    if (!this.controllersReady.every((r) => r)) {
+      throw new Error(
+        "Controllers are not ready. " + JSON.stringify(this.controllersReady)
+      );
+    }
+
     const allStates: GameState[] = [];
     while (
       this.gameState.playerAlive.filter((p) => p).length > 1 &&
       this.gameState.tick < this.options.maxTicks
     ) {
-      const state = cloneDeep(this.update());
-      allStates.push(state);
+      const newState = cloneDeep(await this.update());
+      allStates.push(newState);
     }
     return gameHistorySummarise(allStates);
   }
-
-  private initControllers(gameState: GameState) {}
 
   private initState(
     controllers: Controller[],
@@ -69,9 +89,9 @@ export class Game {
     return poss;
   }
 
-  public update() {
-    const controllerMoves = this.controllers.map((c) =>
-      c.update(this.gameState)
+  public async update() {
+    const controllerMoves = await Promise.all(
+      this.controllers.map(async (c) => await c.update(this.gameState))
     );
 
     const newState = this.apply(this.gameState, controllerMoves);
