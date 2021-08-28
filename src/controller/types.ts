@@ -16,3 +16,9 @@ export type ControllerSelectorProps = {
   setController: (controller: Controller) => void;
   position?: number;
 };
+
+export const isController = (
+  controller: Controller | undefined
+): controller is Controller => {
+  return !!controller;
+};

@@ -1,17 +1,11 @@
 import { Button, Form } from "antd";
 import React, { useCallback, useMemo } from "react";
 import { RestControllerSelector } from "../../controller/adapters/rest";
-import { Controller } from "../../controller/types";
+import { Controller, isController } from "../../controller/types";
 
 export type ControllerCreatorProps = {
   onControllerChange: (controllers: Controller[]) => void;
   onNext: () => void;
-};
-
-const isController = (
-  controller: Controller | undefined
-): controller is Controller => {
-  return !!controller;
 };
 
 export const ControllerCreator: React.FunctionComponent<ControllerCreatorProps> =

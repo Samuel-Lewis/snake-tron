@@ -15,9 +15,7 @@ export class RestController implements Controller {
   }
 
   init = async (payload: InitPayload) => {
-    const response = await (
-      await axios.post(this.url, payload, { headers })
-    ).headers({ "Access-Control-Allow-Origin": "*" });
+    const response = await axios.post(this.url, payload, { headers });
     return response.data;
   };
 
