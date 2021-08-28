@@ -1,5 +1,5 @@
 import "antd/dist/antd.css";
-import "./App.css";
+import "./App.less";
 import { Layout } from "antd";
 import { Route, Switch } from "react-router-dom";
 import { GameRunner } from "./pages/game/GameRunner";
