@@ -1,4 +1,4 @@
-import React, { useRef, useLayoutEffect } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { GameState, Pos } from "../engine/types";
 
 const CANVAS_SIZE = 400;

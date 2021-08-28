@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from "react";
-import { Canvas } from "./Canvas";
+import React, { useCallback, useState } from "react";
 import { GameState } from "../engine/types";
+import { Canvas } from "./Canvas";
 
 export type ViewerProps = {
   states?: GameState[];

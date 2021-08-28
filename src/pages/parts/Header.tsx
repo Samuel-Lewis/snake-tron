@@ -1,17 +1,14 @@
+import { Layout, Menu, Typography } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
-import { Layout, Menu } from "antd";
-import { Typography } from "antd";
 
 const { Title } = Typography;
 const { Header } = Layout;
 
 export const HeaderPart: React.FunctionComponent = () => {
   return (
-    <Header>
-      <div className="logo" style={{ float: "left" }}>
-        <Title>🐍🏍️</Title>
-      </div>
+    <Header className="header">
+      <div className="logo">🐍🏍️</div>
       <Menu theme="dark" mode="horizontal">
         <Menu.Item key="home">
           <Link to="/">Home</Link>
@@ -21,6 +18,9 @@ export const HeaderPart: React.FunctionComponent = () => {
         </Menu.Item>
         <Menu.Item key="viewer">
           <Link to="/viewer">Viewer</Link>
+        </Menu.Item>
+        <Menu.Item key="tester">
+          <Link to="/tester">Controller Tester</Link>
         </Menu.Item>
       </Menu>
     </Header>

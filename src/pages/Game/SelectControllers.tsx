@@ -1,5 +1,6 @@
+import { Button, Form, InputNumber, Select } from "antd";
 import React, { useCallback, useState } from "react";
-import { Form, Button, InputNumber, Select } from "antd";
+
 const { Option } = Select;
 
 export type SelectControllersProps = {

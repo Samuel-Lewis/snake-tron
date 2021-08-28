@@ -1,8 +1,15 @@
+import { Typography } from "antd";
 import React from "react";
-// import { Viewer } from "../viewer/Viewer";
+
+const { Title, Paragraph } = Typography;
 
 export type ViewerPageProps = {};
 
 export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
-  return <div>Not implemented :D</div>;
+  return (
+    <>
+      <Title>Game Viewer</Title>
+      <Paragraph>What, you thought there would be content?</Paragraph>
+    </>
+  );
 };

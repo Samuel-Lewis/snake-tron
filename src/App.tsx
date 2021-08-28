@@ -1,21 +1,20 @@
 import "antd/dist/antd.css";
 import "./App.css";
-
 import { Layout } from "antd";
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-
 import { GamePage } from "./pages/Game/Game";
 import { HomePage } from "./pages/Home";
+import { ContentPart } from "./pages/parts/Content";
 import { FooterPart } from "./pages/parts/Footer";
 import { HeaderPart } from "./pages/parts/Header";
-import { ContentPart } from "./pages/parts/Content";
+import { ControllerTesterPage } from "./pages/Tester";
 import { ViewerPage } from "./pages/Viewer";
 
 function App() {
   return (
     <div className="App">
-      <Layout>
+      <Layout className="layout">
         <HeaderPart />
         <ContentPart>
           <Switch>
@@ -27,6 +26,9 @@ function App() {
             </Route>
             <Route path="/viewer">
               <ViewerPage />
+            </Route>
+            <Route path="/tester">
+              <ControllerTesterPage />
             </Route>
           </Switch>
         </ContentPart>

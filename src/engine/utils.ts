@@ -1,5 +1,5 @@
-import { Pos, Move, GameState, GameHistory } from "./types";
 import { omit } from "lodash";
+import { GameHistory, GameState, Move, Pos } from "./types";
 
 export const randomPos = (bounds: number): Pos => {
   return [

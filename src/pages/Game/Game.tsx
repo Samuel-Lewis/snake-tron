@@ -1,13 +1,12 @@
+import { Steps, Typography } from "antd";
 import React, { useCallback, useState } from "react";
-
-import { Steps } from "antd";
-
-import { SelectControllers } from "./SelectControllers";
-import { GameRunner } from "./GameRunner";
-import { Summary } from "./Summary";
 import { GameHistory } from "../../engine/types";
+import { GameRunner } from "./GameRunner";
+import { SelectControllers } from "./SelectControllers";
+import { Summary } from "./Summary";
 
 const { Step } = Steps;
+const { Title } = Typography;
 
 export type GamePageProps = {};
 
@@ -64,7 +63,7 @@ export const GamePage: React.FunctionComponent<GamePageProps> = () => {
 
   return (
     <div>
-      <h1>Run a game</h1>
+      <Title>Run a game</Title>
       <Steps current={setupStage}>
         <Step title="Game Setup" />
         <Step title="Simulating" />

@@ -1,13 +1,7 @@
-import { v4 as uuidv4 } from "uuid";
 import { cloneDeep } from "lodash";
-
-import { Controller, GameOptions, GameState, Pos, Move } from "./types";
-import {
-  gameHistorySummarise,
-  moveToVector2d,
-  randomPos,
-  withinBounds,
-} from "./utils";
+import { v4 as uuidv4 } from "uuid";
+import { Controller, GameOptions, GameState, Move, Pos } from "./types";
+import { gameHistorySummarise, moveToVector2d, randomPos, withinBounds } from "./utils";
 
 const defaultOptions: GameOptions = {
   gridSize: 50,

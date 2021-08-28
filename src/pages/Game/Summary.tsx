@@ -1,7 +1,6 @@
+import { Button, Collapse, Typography } from "antd";
 import React from "react";
-import { Typography, Button, Collapse } from "antd";
-
-import { GameState, GameHistory } from "../../engine/types";
+import { GameHistory } from "../../engine/types";
 
 const { Paragraph } = Typography;
 const { Panel } = Collapse;
@@ -27,7 +26,7 @@ export const Summary: React.FunctionComponent<SummaryProps> = (props) => {
   return (
     <div>
       <Button type="primary" onClick={() => downloadData(gameHistory)}>
-        Download
+        Download Replay
       </Button>
       <Collapse>
         <Panel header="Full Game History" key="1">

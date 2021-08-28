@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
-
+import React, { useEffect } from "react";
 import { Game } from "../../engine/game";
-import { GameHistory, Controller } from "../../engine/types";
+import { Controller, GameHistory } from "../../engine/types";
 import { RandomController } from "../../sample-controllers/random";
 
 export type GameRunnerProps = {
