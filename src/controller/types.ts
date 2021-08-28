@@ -11,3 +11,8 @@ export interface Controller {
   init: (initPayload: InitPayload) => Promise<void>;
   update: (state: GameState) => Promise<Move>;
 }
+
+export type ControllerSelectorProps = {
+  setController: (controller: Controller) => void;
+  position?: number;
+};

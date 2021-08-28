@@ -1,8 +1,8 @@
 import { Button, Col, Divider, Row, Tabs, Typography } from "antd";
 import React, { useCallback, useState } from "react";
-import { Controller, InitPayload } from "../../controller/types";
-import { GameState, Move } from "../../engine/types";
-import { RestLoader } from "./Rest";
+import { RestControllerSelector } from "../controller/adapters/rest";
+import { Controller, InitPayload } from "../controller/types";
+import { GameState, Move } from "../engine/types";
 
 const { TabPane } = Tabs;
 const { Title, Paragraph } = Typography;
@@ -77,7 +77,7 @@ export const ControllerTesterPage: React.FunctionComponent<ControllerTesterPageP
 
         <Tabs defaultActiveKey="1">
           <TabPane tab="Rest" key="1">
-            <RestLoader setController={loaderCallback} />
+            <RestControllerSelector setController={loaderCallback} />
           </TabPane>
         </Tabs>
 

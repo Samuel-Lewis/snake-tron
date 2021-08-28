@@ -1,14 +1,13 @@
 import "antd/dist/antd.css";
 import "./App.css";
 import { Layout } from "antd";
-import React from "react";
 import { Route, Switch } from "react-router-dom";
-import { GamePage } from "./pages/game/Game";
+import { GameRunner } from "./pages/game/GameRunner";
 import { HomePage } from "./pages/Home";
 import { ContentPart } from "./pages/parts/Content";
 import { FooterPart } from "./pages/parts/Footer";
 import { HeaderPart } from "./pages/parts/Header";
-import { ControllerTesterPage } from "./pages/tester/Tester";
+import { ControllerTesterPage } from "./pages/Tester";
 import { ViewerPage } from "./pages/Viewer";
 
 function App() {
@@ -22,7 +21,7 @@ function App() {
               <HomePage />
             </Route>
             <Route path="/game">
-              <GamePage />
+              <GameRunner />
             </Route>
             <Route path="/viewer">
               <ViewerPage />
