@@ -5,6 +5,8 @@ import { GlobalOutlined } from "@ant-design/icons";
 import { GameState } from "../../engine/types";
 import { Controller, ControllerSelectorProps, InitPayload } from "../types";
 
+const headers = { "Access-Control-Allow-Origin": "*" };
+
 export class RestController implements Controller {
   private url: string;
 
@@ -13,12 +15,14 @@ export class RestController implements Controller {
   }
 
   init = async (payload: InitPayload) => {
-    const response = await axios.post(this.url, payload);
+    const response = await (
+      await axios.post(this.url, payload, { headers })
+    ).headers({ "Access-Control-Allow-Origin": "*" });
     return response.data;
   };
 
   update = async (state: GameState) => {
-    const response = await axios.post(this.url, state);
+    const response = await axios.post(this.url, state, { headers });
     return response.data;
   };
 }
