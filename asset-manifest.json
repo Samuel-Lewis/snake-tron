@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/snake-tron/static/css/main.58c3f4bf.chunk.css",
-    "main.js": "/snake-tron/static/js/main.0775f16b.chunk.js",
-    "main.js.map": "/snake-tron/static/js/main.0775f16b.chunk.js.map",
+    "main.css": "/snake-tron/static/css/main.39617019.chunk.css",
+    "main.js": "/snake-tron/static/js/main.5ba4938b.chunk.js",
+    "main.js.map": "/snake-tron/static/js/main.5ba4938b.chunk.js.map",
     "runtime-main.js": "/snake-tron/static/js/runtime-main.b5e60a39.js",
     "runtime-main.js.map": "/snake-tron/static/js/runtime-main.b5e60a39.js.map",
     "static/css/2.786ae0dd.chunk.css": "/snake-tron/static/css/2.786ae0dd.chunk.css",
-    "static/js/2.2ccd87eb.chunk.js": "/snake-tron/static/js/2.2ccd87eb.chunk.js",
-    "static/js/2.2ccd87eb.chunk.js.map": "/snake-tron/static/js/2.2ccd87eb.chunk.js.map",
+    "static/js/2.6c5aa667.chunk.js": "/snake-tron/static/js/2.6c5aa667.chunk.js",
+    "static/js/2.6c5aa667.chunk.js.map": "/snake-tron/static/js/2.6c5aa667.chunk.js.map",
     "index.html": "/snake-tron/index.html",
     "static/css/2.786ae0dd.chunk.css.map": "/snake-tron/static/css/2.786ae0dd.chunk.css.map",
-    "static/css/main.58c3f4bf.chunk.css.map": "/snake-tron/static/css/main.58c3f4bf.chunk.css.map",
-    "static/js/2.2ccd87eb.chunk.js.LICENSE.txt": "/snake-tron/static/js/2.2ccd87eb.chunk.js.LICENSE.txt"
+    "static/css/main.39617019.chunk.css.map": "/snake-tron/static/css/main.39617019.chunk.css.map",
+    "static/js/2.6c5aa667.chunk.js.LICENSE.txt": "/snake-tron/static/js/2.6c5aa667.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.b5e60a39.js",
     "static/css/2.786ae0dd.chunk.css",
-    "static/js/2.2ccd87eb.chunk.js",
-    "static/css/main.58c3f4bf.chunk.css",
-    "static/js/main.0775f16b.chunk.js"
+    "static/js/2.6c5aa667.chunk.js",
+    "static/css/main.39617019.chunk.css",
+    "static/js/main.5ba4938b.chunk.js"
   ]
 }
