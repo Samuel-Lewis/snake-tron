@@ -1,38 +1,37 @@
+import { Col, Row, Slider } from "antd";
 import React, { useCallback, useState } from "react";
-import { GameState } from "../engine/types";
+import { GameHistory } from "../engine/types";
 import { Canvas } from "./Canvas";
+import { StateSnapshot } from "./Snapshot";
 
 export type ViewerProps = {
-  states?: GameState[];
+  history?: GameHistory;
 };
 
 export const Viewer: React.FunctionComponent<ViewerProps> = (props) => {
-  const { states } = props;
+  const { history } = props;
   const [tick, setTick] = useState(0);
-  const sliderChange = useCallback(
-    (e) => {
-      setTick(e.target.value);
-    },
-    [setTick]
-  );
+  const sliderChange = useCallback((value) => setTick(value), [setTick]);
 
-  if (!states) {
-    return <div>No states loaded</div>;
+  if (!history) {
+    return <div>Error: No history loaded?!</div>;
   }
 
   return (
-    <div>
-      <Canvas state={states[tick]} />
-      <input
-        type="range"
-        value={tick}
-        min={0}
-        max={states.length - 1}
-        onChange={sliderChange}
-      />
-      <div>Tick: {tick}</div>
-      <hr />
-      <pre>{JSON.stringify(states[tick], null, 2)}</pre>
-    </div>
+    <Row justify="center">
+      <Col span={12}>
+        <Canvas state={history.ticks[tick]} gridSize={history.gridSize} />
+        <Slider
+          style={{ width: "400px", marginLeft: 0, marginRight: 0 }}
+          value={tick}
+          min={0}
+          max={history.tickCount - 1}
+          onChange={sliderChange}
+        />
+      </Col>
+      <Col span={12}>
+        <StateSnapshot frame={history.ticks[tick]} />
+      </Col>
+    </Row>
   );
 };

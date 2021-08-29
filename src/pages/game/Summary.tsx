@@ -1,7 +1,9 @@
 import { Button, Collapse, Result, Typography } from "antd";
-import React from "react";
-import { TrophyOutlined } from "@ant-design/icons";
+import React, { useCallback } from "react";
+import { DownloadOutlined, SaveOutlined, TrophyOutlined } from "@ant-design/icons";
 import { GameHistory } from "../../engine/types";
+import { addHistory } from "../../store";
+import { createDownloadHref } from "../../store/download";
 
 const { Panel } = Collapse;
 const { Paragraph } = Typography;
@@ -13,14 +15,18 @@ export type SummaryProps = {
 
 export const Summary: React.FunctionComponent<SummaryProps> = (props) => {
   const { gameHistory, onNext } = props;
+  const handleSave = useCallback(() => {
+    if (!gameHistory) {
+      return;
+    }
+    addHistory(gameHistory);
+  }, [gameHistory]);
 
   if (!gameHistory) {
-    return <div>No game history??</div>;
+    return <div>Error: No game history specified</div>;
   }
 
-  if (gameHistory.error) {
-    return <div>Error: {gameHistory.errorMessage}</div>;
-  }
+  const downloadProps = createDownloadHref(gameHistory);
 
   return (
     <>
@@ -29,6 +35,13 @@ export const Summary: React.FunctionComponent<SummaryProps> = (props) => {
         status="success"
         title={"Player " + gameHistory.winner + " wins!"}
       />
+
+      <Button icon={<DownloadOutlined />} {...downloadProps}>
+        Download
+      </Button>
+      <Button icon={<SaveOutlined />} onClick={handleSave}>
+        Save
+      </Button>
 
       <Collapse defaultActiveKey={["1"]}>
         <Panel header="Full Game History" key="1">

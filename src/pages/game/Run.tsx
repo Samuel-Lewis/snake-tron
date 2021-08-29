@@ -68,7 +68,6 @@ export class Run extends React.Component<RunProps, RunState> {
   };
 
   stateUpdate = (g?: Game) => {
-    console.log("stateUpdate", g);
     const { runStage, game } = this.state;
     if (!game) {
       this.setState({

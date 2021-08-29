@@ -3,17 +3,16 @@ export type GameOptions = {
   maxTicks: number;
 };
 
-export type GameHistory =
-  | {
-      error: false;
-      tickCount: number;
-      ticks: Omit<GameState, "meta">[];
-      winner: number;
-      gridSize: number;
-      playerCount: number;
-      gameId: string;
-    }
-  | { error: true; errorMessage: string };
+export type MetalessGameState = Omit<GameState, "meta">;
+export type GameHistory = {
+  tickCount: number;
+  ticks: MetalessGameState[];
+  winner: number;
+  gridSize: number;
+  playerCount: number;
+  gameId: string;
+  timeStamp: string;
+};
 
 export type GameOptionsOptionals = {};
 

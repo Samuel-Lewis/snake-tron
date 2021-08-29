@@ -1,10 +1,11 @@
 import React, { useLayoutEffect, useRef } from "react";
-import { GameState, Pos } from "../engine/types";
+import { MetalessGameState, Pos } from "../engine/types";
 
 const CANVAS_SIZE = 400;
 
 export type CanvasProps = {
-  state: GameState;
+  state: MetalessGameState;
+  gridSize: number;
 };
 
 const clearCanvas = (ctx: CanvasRenderingContext2D) => {
@@ -34,7 +35,7 @@ function drawSnake(
 
 export const Canvas: React.FunctionComponent<CanvasProps> = (props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { state } = props;
+  const { state, gridSize } = props;
 
   useLayoutEffect(() => {
     const canvas = canvasRef.current;
@@ -47,22 +48,15 @@ export const Canvas: React.FunctionComponent<CanvasProps> = (props) => {
       return;
     }
 
-    const gridSize = state.meta.gridSize;
     const partSize = CANVAS_SIZE / gridSize;
 
     clearCanvas(ctx);
+
     state.positions.forEach((player, i) => {
       drawSnake(ctx, partSize, player, i);
     });
     state.food.forEach((pos) => drawPart(ctx, partSize, pos, "green"));
-  }, [canvasRef, state]);
+  }, [canvasRef, state, gridSize]);
 
-  return (
-    <canvas
-      width={CANVAS_SIZE}
-      height={CANVAS_SIZE}
-      ref={canvasRef}
-      {...props}
-    />
-  );
+  return <canvas width={CANVAS_SIZE} height={CANVAS_SIZE} ref={canvasRef} />;
 };

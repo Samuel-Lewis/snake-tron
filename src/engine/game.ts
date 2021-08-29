@@ -48,9 +48,12 @@ export class Game {
       this.gameState.playerAlive.filter((p) => p).length > 1 &&
       this.gameState.tick < this.options.maxTicks
     ) {
-      const newState = cloneDeep(await this.update());
-      allStates.push(newState);
+      const copy = cloneDeep(this.gameState);
+      allStates.push(copy);
+      await this.update();
     }
+    const copy = cloneDeep(this.gameState);
+    allStates.push(copy);
     return gameHistorySummarise(allStates);
   }
 

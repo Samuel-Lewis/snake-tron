@@ -23,21 +23,15 @@ export const withinBounds = (pos: Pos, bounds: number): boolean => {
 };
 
 export const gameHistorySummarise = (history: GameState[]): GameHistory => {
-  if (history.length === 0) {
-    return {
-      error: true,
-      errorMessage: "No moves made",
-    };
-  }
-
   const meta = history[0].meta;
   const winner = history[history.length - 1].playerAlive.findIndex((p) => p);
   const ticks = history.map((h) => omit(h, ["meta"]));
+  const timeStamp = new Date().toISOString();
   return {
     ...meta,
     tickCount: ticks.length,
     ticks,
     winner,
-    error: false,
+    timeStamp,
   };
 };
