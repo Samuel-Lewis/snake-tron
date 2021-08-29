@@ -1,10 +1,11 @@
 import { Steps, Typography } from "antd";
 import React, { useCallback, useState } from "react";
 import { Controller } from "../../controller/types";
-import { GameOptions } from "../../engine/types";
+import { GameHistory, GameOptions } from "../../engine/types";
 import { ControllerCreator } from "./ControllerCreator";
 import { Run } from "./Run";
 import { GameSetup } from "./Setup";
+import { Summary } from "./Summary";
 
 const { Step } = Steps;
 const { Title } = Typography;
@@ -25,6 +26,7 @@ export const GameRunner: React.FunctionComponent<GamePageProps> = () => {
 
   const [controllers, setControllers] = useState<Controller[]>([]);
   const [options, setOptions] = useState<GameOptions | undefined>();
+  const [gameHistory, setGameHistory] = useState<GameHistory | undefined>();
 
   const creatorCallback = useCallback(
     (controllers) => {
@@ -40,11 +42,18 @@ export const GameRunner: React.FunctionComponent<GamePageProps> = () => {
     [setOptions]
   );
 
+  const completeCallback = useCallback(
+    (history) => {
+      setGameHistory(history);
+    },
+    [setGameHistory]
+  );
+
   const nextCallback = useCallback(() => {
-    setCurrentStage(Math.min(currentStage + 1, SetupStage.SUMMARY));
+    setCurrentStage((currentStage + 1) % (SetupStage.SUMMARY + 1));
   }, [currentStage, setCurrentStage]);
   const prevCallback = useCallback(() => {
-    setCurrentStage(Math.max(currentStage - 1, SetupStage.CONTROLLER_CREATOR));
+    setCurrentStage((currentStage - 1) % (SetupStage.SUMMARY + 1));
   }, [currentStage, setCurrentStage]);
 
   return (
@@ -76,7 +85,12 @@ export const GameRunner: React.FunctionComponent<GamePageProps> = () => {
           controllers={controllers}
           options={options}
           onPrev={prevCallback}
+          onNext={nextCallback}
+          gameComplete={completeCallback}
         />
+      )}
+      {currentStage === SetupStage.SUMMARY && (
+        <Summary gameHistory={gameHistory} onNext={nextCallback} />
       )}
     </>
   );
