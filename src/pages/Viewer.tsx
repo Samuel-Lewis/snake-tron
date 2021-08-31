@@ -1,6 +1,6 @@
-import { Button, Divider, Table, TableProps, Tag, Tooltip, Typography } from "antd";
+import { Button, Divider, message, Table, TableProps, Tag, Tooltip, Typography } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { DeleteOutlined, DownloadOutlined, EyeOutlined } from "@ant-design/icons";
 import { GameHistory, GameResult } from "../engine/types";
 import { getHistories, removeHistory } from "../store";
@@ -16,26 +16,30 @@ const useQuery = () => {
 export type ViewerPageProps = {};
 
 export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
-  const [savedGames, setSavedGames] = useState<GameHistory[]>(getHistories());
+  const [savedGames, setSavedGames] = useState<GameHistory[]>(
+    getHistories().reverse()
+  );
   const [loadedHistory, setLoadedHistory] = useState<GameHistory | undefined>();
   const query = useQuery();
 
   useEffect(() => {
     const id = query.get("gameId");
-    console.log(id);
     if (!id) {
       return;
     }
 
     if (id === "latest") {
-      setLoadedHistory(savedGames[savedGames.length - 1]);
+      setLoadedHistory(savedGames[0]);
       return;
     }
 
     const selected = savedGames.find((h) => h.gameId === id);
     if (selected) {
       setLoadedHistory(selected);
+      return;
     }
+
+    message.error(`Could not find game ${id}`);
   }, [savedGames, setLoadedHistory, query]);
 
   const dataSource = useMemo(() => {
@@ -53,6 +57,7 @@ export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
       dataIndex: "timeStamp",
       key: "timeStamp",
       ellipsis: true,
+      defaultSortOrder: "descend",
       sorter: {
         compare: (a, b: GameHistory) =>
           new Date(a.timeStamp).valueOf() - new Date(b.timeStamp).valueOf(),
@@ -138,10 +143,9 @@ export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
         return (
           <>
             <Tooltip title="View">
-              <Button
-                onClick={() => setLoadedHistory(record)}
-                icon={<EyeOutlined />}
-              />
+              <Link to={`/viewer?gameId=${rest.gameId}`}>
+                <Button icon={<EyeOutlined />} />
+              </Link>
             </Tooltip>
 
             <Tooltip title="Download">
@@ -169,7 +173,15 @@ export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
       {loadedHistory && <Viewer history={loadedHistory} />}
 
       <Divider>Saved Rounds</Divider>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        pagination={{
+          pageSize: 10,
+          position: ["topRight", "bottomRight"],
+          showTotal: (total) => `${total} games`,
+        }}
+      />
     </>
   );
 };
