@@ -3,11 +3,18 @@ export type GameOptions = {
   maxTicks: number;
 };
 
+export enum GameResult {
+  DRAW = "DRAW",
+  WINNER = "WINNER",
+  TIMEOUT = "TIMEOUT",
+}
+
 export type MetalessGameState = Omit<GameState, "meta">;
 export type GameHistory = {
   tickCount: number;
   ticks: MetalessGameState[];
   winner: number;
+  result: GameResult;
   gridSize: number;
   playerCount: number;
   gameId: string;

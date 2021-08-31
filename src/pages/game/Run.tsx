@@ -1,10 +1,10 @@
-import { Alert, Button, Typography } from "antd";
+import { Alert, Button, Progress, ProgressProps, Space, Typography } from "antd";
 import React from "react";
 import { Controller } from "../../controller/types";
 import { Game } from "../../engine/game";
 import { GameHistory, GameOptions } from "../../engine/types";
 
-const { Paragraph } = Typography;
+const { Title } = Typography;
 
 export type RunProps = {
   controllers?: Controller[];
@@ -28,6 +28,7 @@ export type RunState = {
   game?: Game;
   runStage: RunStage;
   history?: GameHistory;
+  tickProgress: number;
 };
 
 export class Run extends React.Component<RunProps, RunState> {
@@ -35,6 +36,7 @@ export class Run extends React.Component<RunProps, RunState> {
     super(props);
     this.state = {
       runStage: RunStage.UNSET,
+      tickProgress: 0,
     };
   }
 
@@ -43,6 +45,15 @@ export class Run extends React.Component<RunProps, RunState> {
       this.stateUpdate();
     }
   }
+
+  onTickUpdate = (tick: number) => {
+    const { options } = this.props;
+    if (!options) {
+      return;
+    }
+    const tickProgress = Math.round((tick / options.maxTicks) * 100);
+    this.setState({ tickProgress });
+  };
 
   componentDidMount() {
     const { controllers, options } = this.props;
@@ -59,7 +70,7 @@ export class Run extends React.Component<RunProps, RunState> {
       return;
     }
 
-    const game = new Game(controllers, options);
+    const game = new Game(controllers, options, this.onTickUpdate);
     this.setState({ game, runStage: RunStage.CONTROLLER_INIT });
   }
 
@@ -101,6 +112,7 @@ export class Run extends React.Component<RunProps, RunState> {
               runStage: RunStage.GAME_OVER,
               history,
             });
+            this.props.onNext();
           })
           .catch((err) => {
             this.setState({
@@ -117,7 +129,7 @@ export class Run extends React.Component<RunProps, RunState> {
     const { runStage, errorDesc, errorTitle } = this.state;
     switch (runStage) {
       case RunStage.CONTROLLER_INIT:
-        return <Paragraph>Initialising controllers...</Paragraph>;
+        return <Title level={3}>Initialising controllers...</Title>;
       case RunStage.ERROR_STATE:
         return (
           <Alert
@@ -128,14 +140,9 @@ export class Run extends React.Component<RunProps, RunState> {
           />
         );
       case RunStage.GAME_RUN:
-        return (
-          <>
-            <Paragraph>Running game...</Paragraph>
-            <Button onClick={this.onCancel}>Previous</Button>
-          </>
-        );
+        return <Title level={3}>Running...</Title>;
       case RunStage.GAME_OVER:
-        return <Alert message="Game complete!" type="success" showIcon />;
+        return <Title level={3}>Game complete!</Title>;
       default:
         return (
           <Alert message="Game unset!? Contact dev" type="warning" showIcon />
@@ -144,24 +151,39 @@ export class Run extends React.Component<RunProps, RunState> {
   };
 
   render() {
-    const { runStage } = this.state;
-    const { onNext } = this.props;
     const body = this.statusMessage();
+
+    const { tickProgress, runStage } = this.state;
+    let progressStatus: ProgressProps["status"] = "normal";
+    if (runStage === RunStage.GAME_RUN) {
+      progressStatus = "active";
+    } else if (runStage === RunStage.GAME_OVER) {
+      progressStatus = "success";
+    } else if (runStage === RunStage.ERROR_STATE) {
+      progressStatus = "exception";
+    }
 
     return (
       <>
-        {body}
-        <br />
-
-        {runStage === RunStage.GAME_OVER ? (
-          <Button type="primary" onClick={onNext}>
-            Next
-          </Button>
-        ) : (
-          <Button onClick={this.onCancel} danger>
+        <Space
+          direction="vertical"
+          style={{
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {body}
+          <Progress
+            type="circle"
+            percent={tickProgress}
+            status={progressStatus}
+          />
+          <br />
+          <Button size="large" onClick={this.onCancel} danger>
             Cancel
           </Button>
-        )}
+        </Space>
       </>
     );
   }

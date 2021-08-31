@@ -51,7 +51,7 @@ export const GameSetup: React.FunctionComponent<GameSetupProps> = ({
       <Form>
         <Form.Item label="Max ticks">
           <InputNumber
-            min={100}
+            min={1}
             max={10000}
             defaultValue={1000}
             value={maxTicks}

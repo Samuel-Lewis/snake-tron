@@ -1,5 +1,5 @@
 import { omit } from "lodash";
-import { GameHistory, GameState, Move, Pos } from "./types";
+import { GameHistory, GameResult, GameState, Move, Pos } from "./types";
 
 export const randomPos = (bounds: number): Pos => {
   return [
@@ -23,8 +23,17 @@ export const withinBounds = (pos: Pos, bounds: number): boolean => {
 };
 
 export const gameHistorySummarise = (history: GameState[]): GameHistory => {
-  const meta = history[0].meta;
-  const winner = history[history.length - 1].playerAlive.findIndex((p) => p);
+  const lastFrame = history[history.length - 1];
+  const meta = lastFrame.meta;
+  const winnerCount = lastFrame.playerAlive.filter((p) => p).length;
+  const result =
+    winnerCount > 1
+      ? GameResult.TIMEOUT
+      : winnerCount === 1
+      ? GameResult.WINNER
+      : GameResult.DRAW;
+
+  const winner = lastFrame.playerAlive.findIndex((p) => p);
   const ticks = history.map((h) => omit(h, ["meta"]));
   const timeStamp = new Date().toISOString();
   return {
@@ -33,5 +42,6 @@ export const gameHistorySummarise = (history: GameState[]): GameHistory => {
     ticks,
     winner,
     timeStamp,
+    result,
   };
 };

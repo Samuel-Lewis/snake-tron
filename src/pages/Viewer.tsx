@@ -1,66 +1,138 @@
-import { Button, Divider, Table, Tooltip, Typography } from "antd";
-import React, { useMemo, useState } from "react";
+import { Button, Divider, Table, TableProps, Tag, Tooltip, Typography } from "antd";
+import React, { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { DeleteOutlined, DownloadOutlined, EyeOutlined } from "@ant-design/icons";
-import { GameHistory } from "../engine/types";
+import { GameHistory, GameResult } from "../engine/types";
 import { getHistories, removeHistory } from "../store";
 import { createDownloadHref } from "../store/download";
 import { Viewer } from "../viewer/Viewer";
 
 const { Title } = Typography;
 
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search);
+};
+
 export type ViewerPageProps = {};
 
 export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
-  const [loadedHistory, setLoadedHistory] = useState<GameHistory | undefined>();
   const [savedGames, setSavedGames] = useState<GameHistory[]>(getHistories());
+  const [loadedHistory, setLoadedHistory] = useState<GameHistory | undefined>();
+  const query = useQuery();
+
+  useEffect(() => {
+    const id = query.get("gameId");
+    console.log(id);
+    if (!id) {
+      return;
+    }
+
+    if (id === "latest") {
+      setLoadedHistory(savedGames[savedGames.length - 1]);
+      return;
+    }
+
+    const selected = savedGames.find((h) => h.gameId === id);
+    if (selected) {
+      setLoadedHistory(selected);
+    }
+  }, [savedGames, setLoadedHistory, query]);
+
   const dataSource = useMemo(() => {
     return savedGames.map((game) => {
-      const humanDate = new Date(game.timeStamp).toString();
       return {
         ...game,
         key: game.gameId,
-        humanDate,
       };
     });
   }, [savedGames]);
 
-  const columns = [
+  const columns: TableProps<GameHistory>["columns"] = [
     {
       title: "Timestamp",
-      dataIndex: "humanDate",
-      key: "humanDate",
+      dataIndex: "timeStamp",
+      key: "timeStamp",
       ellipsis: true,
+      sorter: {
+        compare: (a, b: GameHistory) =>
+          new Date(a.timeStamp).valueOf() - new Date(b.timeStamp).valueOf(),
+        multiple: 1,
+      },
+      render: (timeStamp: string) => {
+        return <span>{new Date(timeStamp).toString()}</span>;
+      },
+    },
+    {
+      title: "Result",
+      dataIndex: "result",
+      key: "result",
+      sorter: {
+        compare: (a: GameHistory, b: GameHistory) =>
+          a.result.localeCompare(b.result),
+        multiple: 2,
+      },
+      render(value: GameResult) {
+        const colour =
+          value === GameResult.WINNER
+            ? "green"
+            : value === GameResult.DRAW
+            ? "blue"
+            : "red";
+        return <Tag color={colour}>{value}</Tag>;
+      },
     },
     {
       title: "Winner",
       dataIndex: "winner",
       key: "winner",
+      sorter: {
+        compare: (a: GameHistory, b: GameHistory) => a.winner - b.winner,
+        multiple: 3,
+      },
     },
     {
       title: "Player Count",
       dataIndex: "playerCount",
       key: "playerCount",
+      sorter: {
+        compare: (a: GameHistory, b: GameHistory) =>
+          a.playerCount - b.playerCount,
+        multiple: 4,
+      },
     },
     {
       title: "Tick Count",
       dataIndex: "tickCount",
       key: "tickCount",
+      sorter: {
+        compare: (a: GameHistory, b: GameHistory) => a.tickCount - b.tickCount,
+        multiple: 5,
+      },
     },
     {
       title: "Grid Size",
       dataIndex: "gridSize",
       key: "gridSize",
+      sorter: {
+        compare: (a: GameHistory, b: GameHistory) => a.gridSize - b.gridSize,
+        multiple: 6,
+      },
     },
     {
       title: "ID",
       dataIndex: "gameId",
       key: "gameId",
       ellipsis: true,
+      sorter: {
+        compare: (a: GameHistory, b: GameHistory) =>
+          a.gameId.localeCompare(b.gameId),
+        multiple: 7,
+      },
     },
     {
       title: "Actions",
       key: "actions",
-      render: (_: any, record: any) => {
+      render: (_, record: any) => {
         const { key, humanDate, ...rest } = record;
         const downloadProps = createDownloadHref(rest);
         return (

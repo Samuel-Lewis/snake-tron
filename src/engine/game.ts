@@ -14,12 +14,19 @@ export class Game {
   options: GameOptions;
   gameState: GameState;
   controllersReady: boolean[];
+  onGameTick: (tick: number) => void;
 
-  constructor(controllers: Controller[], options?: GameOptions) {
+  constructor(
+    controllers: Controller[],
+    options?: GameOptions,
+    onGameTick?: (tick: number) => void
+  ) {
     this.controllers = controllers;
     this.options = { ...defaultOptions, ...options };
+    console.log(options);
     this.gameState = this.initState(controllers, this.options);
     this.controllersReady = new Array(controllers.length).fill(false);
+    this.onGameTick = onGameTick ?? (() => {});
   }
 
   public async initControllers() {
@@ -51,9 +58,11 @@ export class Game {
       const copy = cloneDeep(this.gameState);
       allStates.push(copy);
       await this.update();
+      this.onGameTick(this.gameState.tick);
     }
     const copy = cloneDeep(this.gameState);
     allStates.push(copy);
+    this.onGameTick(this.gameState.tick);
     return gameHistorySummarise(allStates);
   }
 
@@ -108,6 +117,10 @@ export class Game {
     newState.tick = oldState.tick + 1;
 
     controllerMoves.forEach((move, player) => {
+      if (!oldState.playerAlive[player]) {
+        return;
+      }
+
       const currentHead = oldState.positions[player][0];
       const moveVec = moveToVector2d(move);
       const newHead = [

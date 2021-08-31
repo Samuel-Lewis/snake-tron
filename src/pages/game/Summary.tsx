@@ -1,7 +1,10 @@
-import { Button, Collapse, Result, Typography } from "antd";
-import React, { useCallback } from "react";
-import { DownloadOutlined, SaveOutlined, TrophyOutlined } from "@ant-design/icons";
-import { GameHistory } from "../../engine/types";
+import { Button, Collapse, Divider, Result, Space, Typography } from "antd";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import {
+    DownloadOutlined, EyeOutlined, HourglassOutlined, MehOutlined, TrophyOutlined
+} from "@ant-design/icons";
+import { GameHistory, GameResult } from "../../engine/types";
 import { addHistory } from "../../store";
 import { createDownloadHref } from "../../store/download";
 
@@ -15,42 +18,56 @@ export type SummaryProps = {
 
 export const Summary: React.FunctionComponent<SummaryProps> = (props) => {
   const { gameHistory, onNext } = props;
-  const handleSave = useCallback(() => {
-    if (!gameHistory) {
-      return;
+  useEffect(() => {
+    if (gameHistory) {
+      addHistory(gameHistory);
     }
-    addHistory(gameHistory);
-  }, [gameHistory]);
-
+  });
   if (!gameHistory) {
     return <div>Error: No game history specified</div>;
   }
 
   const downloadProps = createDownloadHref(gameHistory);
 
+  let result = (
+    <Result
+      icon={<TrophyOutlined />}
+      status="success"
+      title={"Player " + gameHistory.winner + " wins!"}
+    />
+  );
+
+  if (gameHistory.result === GameResult.DRAW) {
+    result = <Result icon={<MehOutlined />} status="warning" title={"Draw!"} />;
+  } else if (gameHistory.result === GameResult.TIMEOUT) {
+    result = (
+      <Result icon={<HourglassOutlined />} status="warning" title={"Timeout"} />
+    );
+  }
   return (
     <>
-      <Result
-        icon={<TrophyOutlined />}
-        status="success"
-        title={"Player " + gameHistory.winner + " wins!"}
-      />
+      {result}
+      <Space>
+        <Button onClick={onNext} type="primary">
+          New Game
+        </Button>
+        <Link to={`/viewer?gameId=${gameHistory?.gameId}`}>
+          <Button icon={<EyeOutlined />}>Show in viewer</Button>
+        </Link>
+        <Button icon={<DownloadOutlined />} {...downloadProps}>
+          Download Replay
+        </Button>
+      </Space>
 
-      <Button icon={<DownloadOutlined />} {...downloadProps}>
-        Download
-      </Button>
-      <Button icon={<SaveOutlined />} onClick={handleSave}>
-        Save
-      </Button>
+      <Divider />
 
-      <Collapse defaultActiveKey={["1"]}>
+      <Collapse>
         <Panel header="Full Game History" key="1">
           <Paragraph>
             <pre>{JSON.stringify(gameHistory, null, 2)}</pre>
           </Paragraph>
         </Panel>
       </Collapse>
-      <Button onClick={onNext}>Start Again</Button>
     </>
   );
 };
