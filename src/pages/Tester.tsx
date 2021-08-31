@@ -1,6 +1,6 @@
 import { Button, Col, Divider, Row, Tabs, Typography } from "antd";
 import React, { useCallback, useState } from "react";
-import { RestControllerSelector } from "../controller/adapters/rest";
+import { RestControllerFactory } from "../controller/adapters/rest";
 import { Controller, InitPayload } from "../controller/types";
 import { GameState, Move } from "../engine/types";
 
@@ -49,8 +49,9 @@ export const ControllerTesterPage: React.FunctionComponent<ControllerTesterPageP
     const [sendData, setSendData] = useState<string>("");
 
     const loaderCallback = useCallback(
-      (newController) => {
-        setController(newController);
+      (value) => {
+        console.log(value);
+        setController(RestControllerFactory.create(value));
       },
       [setController]
     );
@@ -76,8 +77,8 @@ export const ControllerTesterPage: React.FunctionComponent<ControllerTesterPageP
         <Title>Controller Tester</Title>
 
         <Tabs defaultActiveKey="1">
-          <TabPane tab="Rest" key="1">
-            <RestControllerSelector setController={loaderCallback} />
+          <TabPane tab={RestControllerFactory.label} key="1">
+            <RestControllerFactory.Selector onChange={loaderCallback} />
           </TabPane>
         </Tabs>
 

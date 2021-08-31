@@ -7,7 +7,7 @@ const { Header } = Layout;
 export const HeaderPart: React.FunctionComponent = () => {
   return (
     <Header className="header">
-      <div className="logo">🐍🏍️</div>
+      <div className="logo"></div>
       <Menu theme="dark" mode="horizontal">
         <Menu.Item key="home">
           <Link to="/">Home</Link>

@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useCallback } from "react";
 import { GlobalOutlined } from "@ant-design/icons";
 import { GameState } from "../../engine/types";
-import { Controller, ControllerSelectorProps, InitPayload } from "../types";
+import { Controller, ControllerFactory, ControllerSelector, InitPayload } from "../types";
 
 const headers = { "Access-Control-Allow-Origin": "*" };
 
@@ -23,21 +23,30 @@ export class RestController implements Controller {
     const response = await axios.post(this.url, state, { headers });
     return response.data;
   };
+
+  end = async (state: GameState) => {
+    await axios.post(this.url, state, { headers });
+  };
 }
 
-export const RestControllerSelector: React.FunctionComponent<ControllerSelectorProps> =
-  ({ setController, position }) => {
-    const inputCallback = useCallback(
-      (event) => {
-        const controller = new RestController(event.target.value);
-        setController(controller);
-      },
-      [setController]
-    );
+export const RestControllerSelector: ControllerSelector = ({ onChange }) => {
+  const onChangeCallback = useCallback(
+    (e) => {
+      if (onChange) {
+        onChange(e.target.value);
+      }
+    },
+    [onChange]
+  );
+  return (
+    <Form.Item label="Address">
+      <Input prefix={<GlobalOutlined />} onChange={onChangeCallback} />
+    </Form.Item>
+  );
+};
 
-    return (
-      <Form.Item label="Address" name={position}>
-        <Input prefix={<GlobalOutlined />} onChange={inputCallback} />
-      </Form.Item>
-    );
-  };
+export const RestControllerFactory: ControllerFactory = {
+  Selector: RestControllerSelector,
+  create: (value) => new RestController(value),
+  label: "REST",
+};

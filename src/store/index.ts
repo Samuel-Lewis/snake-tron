@@ -6,20 +6,20 @@ export const enum StoreKeys {
 }
 
 export const getHistories = (): GameHistory[] => {
-  return store.get(StoreKeys.HISTORIES) || [];
-};
-
-export const setHistories = (histories: GameHistory[]): void => {
-  store.set(StoreKeys.HISTORIES, histories);
+  const histories = store.get(StoreKeys.HISTORIES) || {};
+  return Object.values(histories as GameHistory[]).sort(
+    (a, b) => new Date(a.timeStamp).valueOf() - new Date(b.timeStamp).valueOf()
+  );
 };
 
 export const addHistory = (history: GameHistory): void => {
-  const histories = getHistories();
-  histories.push(history);
-  setHistories(histories);
+  const histories = store.get(StoreKeys.HISTORIES) || {};
+  store.set(StoreKeys.HISTORIES, { ...histories, [history.gameId]: history });
 };
 
-export const removeHistory = (id: string): void => {
-  const histories = getHistories().filter((history) => history.gameId !== id);
-  setHistories(histories);
+export const removeHistory = (id: string): GameHistory[] => {
+  const histories = store.get(StoreKeys.HISTORIES) || {};
+  histories[id] = undefined;
+  store.set(StoreKeys.HISTORIES, histories);
+  return getHistories();
 };
