@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/snake-tron/static/css/main.800a39be.chunk.css",
-    "main.js": "/snake-tron/static/js/main.33657d6e.chunk.js",
-    "main.js.map": "/snake-tron/static/js/main.33657d6e.chunk.js.map",
+    "main.js": "/snake-tron/static/js/main.8dcebd1b.chunk.js",
+    "main.js.map": "/snake-tron/static/js/main.8dcebd1b.chunk.js.map",
     "runtime-main.js": "/snake-tron/static/js/runtime-main.b5e60a39.js",
     "runtime-main.js.map": "/snake-tron/static/js/runtime-main.b5e60a39.js.map",
     "static/css/2.786ae0dd.chunk.css": "/snake-tron/static/css/2.786ae0dd.chunk.css",
@@ -18,6 +18,6 @@
     "static/css/2.786ae0dd.chunk.css",
     "static/js/2.bfd0f5eb.chunk.js",
     "static/css/main.800a39be.chunk.css",
-    "static/js/main.33657d6e.chunk.js"
+    "static/js/main.8dcebd1b.chunk.js"
   ]
 }
