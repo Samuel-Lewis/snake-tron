@@ -10,7 +10,7 @@ export type InitPayload = {
 
 export interface Controller {
   init: (initPayload: InitPayload) => Promise<void>;
-  update: (state: GameState) => Promise<Move>;
+  update: (state: GameState, playerNumber?: number) => Promise<Move>;
   end: (state: GameState) => Promise<void>;
 }
 

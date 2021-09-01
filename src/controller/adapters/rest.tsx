@@ -19,8 +19,9 @@ export class RestController implements Controller {
     return response.data;
   };
 
-  update = async (state: GameState) => {
-    const response = await axios.post(this.url, state, { headers });
+  update = async (state: GameState, playerNumber?: number) => {
+    const params = { playerNumber };
+    const response = await axios.post(this.url, state, { headers, params });
     return response.data;
   };
 

@@ -103,7 +103,7 @@ export class Game {
 
   public async update() {
     const controllerMoves = await Promise.all(
-      this.controllers.map(async (c) => await c.update(this.gameState))
+      this.controllers.map(async (c, i) => await c.update(this.gameState, i))
     );
 
     const newState = this.apply(this.gameState, controllerMoves);

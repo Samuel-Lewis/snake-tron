@@ -7,10 +7,12 @@ import { GameState, Move } from "../engine/types";
 const { TabPane } = Tabs;
 const { Title, Paragraph } = Typography;
 
+const dummyId = "48e2ee9e-171e-45bd-8904-a762d8e2b782";
+
 const sampleIniData: InitPayload = {
-  playerNumber: 2,
-  playerCount: 4,
-  gameId: "sample-test",
+  playerNumber: 1,
+  playerCount: 2,
+  gameId: dummyId,
   gridSize: 50,
 };
 
@@ -35,7 +37,7 @@ const sampleStateData: GameState = {
   playerAlive: [true, true],
   meta: {
     playerCount: 2,
-    gameId: "48e2ee9e-171e-45bd-8904-a762d8e2b782",
+    gameId: dummyId,
     gridSize: 50,
   },
 };
@@ -67,7 +69,7 @@ export const ControllerTesterPage: React.FunctionComponent<ControllerTesterPageP
     const stateSendButton = useCallback(() => {
       setSendData(JSON.stringify(sampleStateData, null, 2));
       controller
-        ?.update(sampleStateData)
+        ?.update(sampleStateData, 1)
         .then((r) => setResponse(JSON.stringify(r, null, 2)))
         .catch((e) => setResponse(e.message));
     }, [controller, setResponse]);

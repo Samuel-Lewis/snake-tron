@@ -57,7 +57,6 @@ export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
       dataIndex: "timeStamp",
       key: "timeStamp",
       ellipsis: true,
-      defaultSortOrder: "descend",
       sorter: {
         compare: (a, b: GameHistory) =>
           new Date(a.timeStamp).valueOf() - new Date(b.timeStamp).valueOf(),
