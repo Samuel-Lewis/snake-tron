@@ -1,4 +1,4 @@
-import { flatten, without } from "lodash";
+import { flatten, isEqual } from "lodash";
 import { GameState, isPos, Pos } from "./types";
 
 export class PositionPool {
@@ -14,12 +14,11 @@ export class PositionPool {
     const { positions, meta, food } = this.gameState;
     const width = meta.gridSize;
     const taken = flatten(positions).concat(food);
-    const allPos = new Array(width * width)
+    return new Array(width * width)
       .fill(0)
       .map((_, i) => [i % width, Math.floor(i / width)])
+      .filter((p) => !taken.some((t) => isEqual(t, p)))
       .filter(isPos);
-
-    return without(allPos, ...taken);
   };
 
   public next = () => {

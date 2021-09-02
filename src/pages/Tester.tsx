@@ -52,7 +52,6 @@ export const ControllerTesterPage: React.FunctionComponent<ControllerTesterPageP
 
     const loaderCallback = useCallback(
       (value) => {
-        console.log(value);
         setController(RestControllerFactory.create(value));
       },
       [setController]

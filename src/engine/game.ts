@@ -1,3 +1,4 @@
+import { notification } from "antd";
 import { cloneDeep } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Controller } from "../controller/types";
@@ -95,7 +96,9 @@ export class Game {
 
   public async update() {
     const controllerMoves = await Promise.all(
-      this.controllers.map(async (c, i) => await c.update(this.gameState, i))
+      this.controllers.map(
+        async (c, i) => await c.update(this.gameState, i).catch(() => null)
+      )
     );
 
     const newState = this.apply(this.gameState, controllerMoves);
@@ -103,12 +106,25 @@ export class Game {
     return this.gameState;
   }
 
-  private apply(oldState: GameState, controllerMoves: Move[]): GameState {
+  private apply(
+    oldState: GameState,
+    controllerMoves: (Move | null)[]
+  ): GameState {
     const newState = { ...oldState };
 
     newState.tick = oldState.tick + 1;
 
     const newHeads = controllerMoves.map((move, player) => {
+      if (move === null) {
+        notification.error({
+          message: `Player ${player} disqualified`,
+          description: `Player ${player} has been disqualified. Either the controller has crashed or it returned an invalid move.`,
+          duration: 0,
+        });
+        newState.playerAlive[player] = false;
+        return null;
+      }
+
       if (!oldState.playerAlive[player]) {
         return null;
       }

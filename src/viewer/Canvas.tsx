@@ -31,7 +31,6 @@ function drawSnake(
   ctx.lineWidth = partSize - 2;
   ctx.strokeStyle = colour;
   ctx.lineCap = "square";
-
   ctx.beginPath();
   ctx.moveTo(headX, headY);
 
