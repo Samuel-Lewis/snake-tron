@@ -16,6 +16,7 @@ export type CanvasProps = {
 const clearCanvas = (ctx: CanvasRenderingContext2D) => {
   ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
   ctx.lineWidth = 1;
+  ctx.strokeStyle = "white";
   ctx.strokeRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 };
 

@@ -5,7 +5,10 @@ import { GlobalOutlined } from "@ant-design/icons";
 import { GameState } from "../../engine/types";
 import { Controller, ControllerFactory, ControllerSelector, InitPayload } from "../types";
 
-const headers = { "Access-Control-Allow-Origin": "*" };
+const axiosOptions = {
+  headers: { "Access-Control-Allow-Origin": "*" },
+  timeout: 2000,
+};
 
 export class RestController implements Controller {
   private url: string;
@@ -15,18 +18,31 @@ export class RestController implements Controller {
   }
 
   init = async (payload: InitPayload) => {
-    const response = await axios.post(this.url, payload, { headers });
+    const params = { playerNumber: payload.playerNumber };
+    const response = await axios.post(this.url + "/init", payload, {
+      ...axiosOptions,
+      params,
+    });
     return response.data;
   };
 
   update = async (state: GameState, playerNumber?: number) => {
     const params = { playerNumber };
-    const response = await axios.post(this.url, state, { headers, params });
+    const response = await axios.post(this.url + "/update", state, {
+      ...axiosOptions,
+      params,
+    });
     return response.data;
   };
 
-  end = async (state: GameState) => {
-    await axios.post(this.url, state, { headers });
+  end = async (state: GameState, playerNumber?: number) => {
+    const params = { playerNumber };
+    const response = await axios.post(this.url + "/end", state, {
+      ...axiosOptions,
+      params,
+    });
+
+    return response.data;
   };
 }
 

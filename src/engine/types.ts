@@ -28,6 +28,7 @@ export enum Move {
   SOUTH = "S",
   EAST = "E",
   WEST = "W",
+  NOP = "X",
 }
 
 export type Pos = [number, number];

@@ -11,7 +11,7 @@ export type InitPayload = {
 export interface Controller {
   init: (initPayload: InitPayload) => Promise<void>;
   update: (state: GameState, playerNumber?: number) => Promise<Move>;
-  end: (state: GameState) => Promise<void>;
+  end: (gameState: GameState, playerNumber?: number) => Promise<void>;
 }
 
 export type ControllerSelector =

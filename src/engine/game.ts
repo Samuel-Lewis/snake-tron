@@ -64,6 +64,11 @@ export class Game {
     const copy = cloneDeep(this.gameState);
     allStates.push(copy);
     this.onGameTick(this.gameState.tick);
+
+    await Promise.all(
+      this.controllers.map(async (c, i) => await c.end(this.gameState, i))
+    );
+
     return gameHistorySummarise(allStates);
   }
 
@@ -96,9 +101,13 @@ export class Game {
 
   public async update() {
     const controllerMoves = await Promise.all(
-      this.controllers.map(
-        async (c, i) => await c.update(this.gameState, i).catch(() => null)
-      )
+      this.controllers.map(async (c, i) => {
+        if (this.gameState.playerAlive[i]) {
+          return await c.update(this.gameState, i).catch(() => null);
+        } else {
+          return Move.NOP;
+        }
+      })
     );
 
     const newState = this.apply(this.gameState, controllerMoves);
@@ -115,6 +124,11 @@ export class Game {
     newState.tick = oldState.tick + 1;
 
     const newHeads = controllerMoves.map((move, player) => {
+      if (move === Move.NOP) {
+        newState.playerAlive[player] = false;
+        return null;
+      }
+
       if (move === null) {
         notification.error({
           message: `Player ${player} disqualified`,
@@ -128,6 +142,7 @@ export class Game {
       if (!oldState.playerAlive[player]) {
         return null;
       }
+
       newState.lastMoves[player] = move;
       const currentHead = oldState.positions[player][0];
       const moveVec = moveToVector2d(move);

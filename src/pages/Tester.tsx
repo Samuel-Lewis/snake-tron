@@ -1,4 +1,4 @@
-import { Button, Col, Divider, Row, Tabs, Typography } from "antd";
+import { Button, Col, Divider, Row, Space, Tabs, Typography } from "antd";
 import React, { useCallback, useState } from "react";
 import { RestControllerFactory } from "../controller/adapters/rest";
 import { Controller, InitPayload } from "../controller/types";
@@ -57,7 +57,7 @@ export const ControllerTesterPage: React.FunctionComponent<ControllerTesterPageP
       [setController]
     );
 
-    const gameIniButton = useCallback(() => {
+    const iniTestCallback = useCallback(() => {
       setSendData(JSON.stringify(sampleIniData, null, 2));
       controller
         ?.init(sampleIniData)
@@ -65,10 +65,18 @@ export const ControllerTesterPage: React.FunctionComponent<ControllerTesterPageP
         .catch((e) => setResponse(e.message));
     }, [controller, setResponse]);
 
-    const stateSendButton = useCallback(() => {
+    const stateTestCallback = useCallback(() => {
       setSendData(JSON.stringify(sampleStateData, null, 2));
       controller
         ?.update(sampleStateData, 1)
+        .then((r) => setResponse(JSON.stringify(r, null, 2)))
+        .catch((e) => setResponse(e.message));
+    }, [controller, setResponse]);
+
+    const endTestCallback = useCallback(() => {
+      setSendData(JSON.stringify(sampleStateData, null, 2));
+      controller
+        ?.end(sampleStateData, 1)
         .then((r) => setResponse(JSON.stringify(r, null, 2)))
         .catch((e) => setResponse(e.message));
     }, [controller, setResponse]);
@@ -82,9 +90,11 @@ export const ControllerTesterPage: React.FunctionComponent<ControllerTesterPageP
             <RestControllerFactory.Selector onChange={loaderCallback} />
           </TabPane>
         </Tabs>
-
-        <Button onClick={gameIniButton}>Test game initialise</Button>
-        <Button onClick={stateSendButton}>Test game update</Button>
+        <Space>
+          <Button onClick={iniTestCallback}>Test game initialise</Button>
+          <Button onClick={stateTestCallback}>Test game update</Button>
+          <Button onClick={endTestCallback}>Test game end</Button>
+        </Space>
 
         <Row gutter={16}>
           <Col span={12}>
