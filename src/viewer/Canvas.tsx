@@ -1,7 +1,12 @@
 import React, { useLayoutEffect, useRef } from "react";
 import { MetalessGameState, Pos } from "../engine/types";
+import { getColour } from "../theme";
 
 const CANVAS_SIZE = 400;
+
+const posToCanvas = ([x, y]: Pos, partSize: number) => {
+  return [x * partSize + partSize / 2, y * partSize + partSize / 2];
+};
 
 export type CanvasProps = {
   state: MetalessGameState;
@@ -10,18 +15,9 @@ export type CanvasProps = {
 
 const clearCanvas = (ctx: CanvasRenderingContext2D) => {
   ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+  ctx.lineWidth = 1;
   ctx.strokeRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 };
-
-function drawPart(
-  ctx: CanvasRenderingContext2D,
-  partSize: number,
-  [x, y]: Pos,
-  colour: string
-) {
-  ctx.fillStyle = colour;
-  ctx.fillRect(x * partSize, y * partSize, partSize, partSize);
-}
 
 function drawSnake(
   ctx: CanvasRenderingContext2D,
@@ -29,9 +25,35 @@ function drawSnake(
   snake: Pos[],
   player: number
 ) {
-  const colour = "red";
-  snake.forEach((pos) => drawPart(ctx, partSize, pos, colour));
+  const colour = getColour(player);
+  const [headX, headY] = posToCanvas(snake[0], partSize);
+
+  ctx.lineWidth = partSize - 2;
+  ctx.strokeStyle = colour;
+  ctx.lineCap = "square";
+
+  ctx.beginPath();
+  ctx.moveTo(headX, headY);
+
+  snake.forEach((pos) => {
+    const [x, y] = posToCanvas(pos, partSize);
+    ctx.lineTo(x, y);
+  });
+
+  ctx.stroke();
 }
+
+const drawFood = (
+  ctx: CanvasRenderingContext2D,
+  partSize: number,
+  pos: Pos
+) => {
+  const [x, y] = posToCanvas(pos, partSize);
+  ctx.fillStyle = "green";
+  ctx.beginPath();
+  ctx.arc(x, y, partSize / 2, 0, 2 * Math.PI);
+  ctx.fill();
+};
 
 export const Canvas: React.FunctionComponent<CanvasProps> = (props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -55,7 +77,7 @@ export const Canvas: React.FunctionComponent<CanvasProps> = (props) => {
     state.positions.forEach((player, i) => {
       drawSnake(ctx, partSize, player, i);
     });
-    state.food.forEach((pos) => drawPart(ctx, partSize, pos, "green"));
+    state.food.forEach((pos) => drawFood(ctx, partSize, pos));
   }, [canvasRef, state, gridSize]);
 
   return <canvas width={CANVAS_SIZE} height={CANVAS_SIZE} ref={canvasRef} />;

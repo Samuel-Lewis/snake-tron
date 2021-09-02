@@ -2,6 +2,7 @@ import { Table, Typography } from "antd";
 import React from "react";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { MetalessGameState } from "../engine/types";
+import { getColour } from "../theme";
 
 const { Paragraph } = Typography;
 
@@ -21,18 +22,29 @@ export const StateSnapshot: React.FunctionComponent<StateSnapshotProps> = ({
     .map((_, i) => {
       return {
         key: `Player ${i}`,
-        name: `Player ${i}`,
         alive: frame.playerAlive[i],
         lastMove: frame.lastMoves[i],
         position: frame.positions[i],
+        playerNumber: i,
       };
     });
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
+      title: "Player",
+      dataIndex: "playerNumber",
+      key: "playerNumber",
+      render: (number: number) => {
+        return (
+          <>
+            <span
+              className="dot"
+              style={{ backgroundColor: getColour(number) }}
+            ></span>
+            Player {number}
+          </>
+        );
+      },
     },
     {
       title: "Alive",

@@ -49,13 +49,13 @@ export const Summary: React.FunctionComponent<SummaryProps> = (props) => {
       {result}
       <Space>
         <Button onClick={onNext} type="primary">
-          New Game
+          New game
         </Button>
         <Link to={`/viewer?gameId=${gameHistory?.gameId}`}>
           <Button icon={<EyeOutlined />}>Show in viewer</Button>
         </Link>
         <Button icon={<DownloadOutlined />} {...downloadProps}>
-          Download Replay
+          Download replay
         </Button>
       </Space>
 

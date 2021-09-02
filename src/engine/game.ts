@@ -1,8 +1,9 @@
 import { cloneDeep } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Controller } from "../controller/types";
-import { GameOptions, GameState, Move, Pos } from "./types";
-import { gameHistorySummarise, moveToVector2d, randomPos, withinBounds } from "./utils";
+import { PositionPool } from "./positionPool";
+import { GameOptions, GameState, isPos, Move, Pos } from "./types";
+import { gameHistorySummarise, moveToVector2d, withinBounds } from "./utils";
 
 const defaultOptions: GameOptions = {
   gridSize: 50,
@@ -23,7 +24,6 @@ export class Game {
   ) {
     this.controllers = controllers;
     this.options = { ...defaultOptions, ...options };
-    console.log(options);
     this.gameState = this.initState(controllers, this.options);
     this.controllersReady = new Array(controllers.length).fill(false);
     this.onGameTick = onGameTick ?? (() => {});
@@ -84,21 +84,13 @@ export class Game {
       },
     };
 
-    newState.positions = this.uniquePos(newState, playerCount).map((p) => [p]);
-    newState.food = this.uniquePos(newState, playerCount);
+    const posPool = new PositionPool(newState);
+
+    newState.positions = new Array(playerCount)
+      .fill(null)
+      .map(() => [posPool.next()]);
+    newState.food = new Array(playerCount).fill(null).map(() => posPool.next());
     return newState;
-  }
-
-  private uniquePos(gameState: GameState, positions: number = 1): Pos[] {
-    const poss: Pos[] = [];
-
-    // TODO: actually ensure unique positions
-    for (let i = 0; i < positions; i++) {
-      const p = randomPos(gameState.meta.gridSize);
-      poss.push(p);
-    }
-
-    return poss;
   }
 
   public async update() {
@@ -116,59 +108,95 @@ export class Game {
 
     newState.tick = oldState.tick + 1;
 
-    controllerMoves.forEach((move, player) => {
+    const newHeads = controllerMoves.map((move, player) => {
       if (!oldState.playerAlive[player]) {
-        return;
+        return null;
       }
-
+      newState.lastMoves[player] = move;
       const currentHead = oldState.positions[player][0];
       const moveVec = moveToVector2d(move);
-      const newHead = [
-        currentHead[0] + moveVec[0],
-        currentHead[1] + moveVec[1],
-      ] as Pos;
-
-      newState.lastMoves[player] = move;
-
-      // Check bounds collision
-      if (!withinBounds(newHead, newState.meta.gridSize)) {
-        newState.playerAlive[player] = false;
-        return;
-      }
-
-      // Check part collision
-      const collided = oldState.positions.some((pos) => {
-        return pos.some(([x, y]) => x === newHead[0] && y === newHead[1]);
-      });
-
-      if (collided) {
-        newState.playerAlive[player] = false;
-        return;
-      }
-
-      // Check food collision
-      const ateFood = oldState.food.some((pos) => {
-        if (pos[0] === newHead[0] && pos[1] === newHead[1]) {
-          newState.food = newState.food.filter((p) => p !== pos);
-          return true;
-        }
-        return false;
-      });
-
-      if (!ateFood) {
-        newState.positions[player].pop();
-      }
-      newState.positions[player].unshift(newHead);
+      return [currentHead[0] + moveVec[0], currentHead[1] + moveVec[1]] as Pos;
     });
 
-    // Repopulate food
-    newState.food.push(
-      ...this.uniquePos(
-        newState,
-        newState.meta.playerCount - newState.food.length
-      )
-    );
+    // Check out of bounds
+    newHeads.forEach((head, player) => {
+      if (head === null) {
+        return;
+      }
+      if (!withinBounds(head, newState.meta.gridSize)) {
+        newState.playerAlive[player] = false;
+      }
+    });
 
+    // Check head collisions
+    newHeads.forEach((head, player) => {
+      if (head === null) {
+        return;
+      }
+      const collides = newHeads
+        .filter((p) => p !== null && p[0] === head[0] && p[1] === head[1])
+        .filter(isPos).length;
+
+      // Collides with more than self
+      if (collides > 1) {
+        newState.playerAlive[player] = false;
+      }
+    });
+
+    // Eat or shrink
+    const eatenFoodIndex: Set<number> = new Set();
+    newHeads.forEach((head, player) => {
+      if (head === null) {
+        return;
+      }
+      const collides = newState.food.findIndex(
+        (p) => p !== null && p[0] === head[0] && p[1] === head[1]
+      );
+
+      if (collides !== -1) {
+        // Eats food
+        eatenFoodIndex.add(collides);
+      } else {
+        // Shrinks
+        newState.positions[player].pop();
+      }
+    });
+
+    // Detect head vs body collisions
+    const allBodies = newState.positions.flat();
+    newHeads.forEach((head, player) => {
+      if (head === null) {
+        return;
+      }
+      const collides = allBodies.findIndex(
+        (p) => p !== null && p[0] === head[0] && p[1] === head[1]
+      );
+      if (collides !== -1) {
+        newState.playerAlive[player] = false;
+      }
+    });
+
+    // Commit to new heads
+    newHeads.forEach((head, player) => {
+      if (head === null) {
+        return;
+      }
+      newState.positions[player].unshift(head);
+    });
+
+    // Replace eaten food
+    const positionPool = new PositionPool(newState);
+    newState.food = newState.food
+      .map((p, i) => {
+        if (eatenFoodIndex.has(i)) {
+          if (positionPool.empty()) {
+            return undefined;
+          }
+          return positionPool.next();
+        }
+        return p;
+      })
+      .filter(isPos);
     return newState;
   }
 }

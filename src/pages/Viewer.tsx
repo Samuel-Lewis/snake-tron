@@ -95,7 +95,7 @@ export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
       },
     },
     {
-      title: "Player Count",
+      title: "Player count",
       dataIndex: "playerCount",
       key: "playerCount",
       sorter: {
@@ -105,7 +105,7 @@ export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
       },
     },
     {
-      title: "Tick Count",
+      title: "Tick count",
       dataIndex: "tickCount",
       key: "tickCount",
       sorter: {
@@ -114,7 +114,7 @@ export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
       },
     },
     {
-      title: "Grid Size",
+      title: "Grid size",
       dataIndex: "gridSize",
       key: "gridSize",
       sorter: {
@@ -155,6 +155,9 @@ export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
                 onClick={() => {
                   removeHistory(record.gameId);
                   setSavedGames(getHistories());
+                  if (loadedHistory && loadedHistory.gameId === record.gameId) {
+                    setLoadedHistory(undefined);
+                  }
                 }}
                 icon={<DeleteOutlined />}
               />

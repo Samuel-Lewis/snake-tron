@@ -44,3 +44,7 @@ export type GameState = {
     gameId: string;
   };
 };
+
+export const isPos = (pos: any): pos is Pos => {
+  return Array.isArray(pos) && pos.length === 2;
+};
