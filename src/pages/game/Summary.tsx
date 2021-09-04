@@ -14,10 +14,11 @@ const { Paragraph } = Typography;
 export type SummaryProps = {
   gameHistory?: GameHistory;
   onNext: () => void;
+  onPrev: () => void;
 };
 
 export const Summary: React.FunctionComponent<SummaryProps> = (props) => {
-  const { gameHistory, onNext } = props;
+  const { gameHistory, onNext, onPrev } = props;
   useEffect(() => {
     if (gameHistory) {
       addHistory(gameHistory);
@@ -48,9 +49,10 @@ export const Summary: React.FunctionComponent<SummaryProps> = (props) => {
     <>
       {result}
       <Space>
-        <Button onClick={onNext} type="primary">
-          New game
+        <Button onClick={onPrev} type="primary">
+          Play again
         </Button>
+        <Button onClick={onNext}>New game</Button>
         <Link to={`/viewer?gameId=${gameHistory?.gameId}`}>
           <Button icon={<EyeOutlined />}>Show in viewer</Button>
         </Link>

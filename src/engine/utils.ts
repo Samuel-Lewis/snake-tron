@@ -33,7 +33,10 @@ export const gameHistorySummarise = (history: GameState[]): GameHistory => {
       ? GameResult.WINNER
       : GameResult.DRAW;
 
-  const winner = lastFrame.playerAlive.findIndex((p) => p);
+  let winner = null;
+  if (result === GameResult.WINNER) {
+    winner = lastFrame.playerAlive.findIndex((p) => p);
+  }
   const ticks = history.map((h) => omit(h, ["meta"]));
   const timeStamp = new Date().toISOString();
   return {

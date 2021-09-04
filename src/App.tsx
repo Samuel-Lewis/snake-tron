@@ -2,6 +2,7 @@ import "antd/dist/antd.css";
 import "./App.less";
 import { Layout } from "antd";
 import { Route, Switch } from "react-router-dom";
+import { DocsPage } from "./pages/docs/docs";
 import { GameRunner } from "./pages/game/GameRunner";
 import { HomePage } from "./pages/Home";
 import { ContentPart } from "./pages/parts/Content";
@@ -17,18 +18,11 @@ function App() {
         <HeaderPart />
         <ContentPart>
           <Switch>
-            <Route exact path="/">
-              <HomePage />
-            </Route>
-            <Route path="/game">
-              <GameRunner />
-            </Route>
-            <Route path="/viewer">
-              <ViewerPage />
-            </Route>
-            <Route path="/tester">
-              <ControllerTesterPage />
-            </Route>
+            <Route exact path="/" component={HomePage} />
+            <Route path="/game" component={GameRunner} />
+            <Route path="/viewer" component={ViewerPage} />
+            <Route path="/tester" component={ControllerTesterPage} />
+            <Route path="/docs" component={DocsPage} />
           </Switch>
         </ContentPart>
         <FooterPart />

@@ -21,6 +21,9 @@ export const HeaderPart: React.FunctionComponent = () => {
         <Menu.Item key="tester">
           <Link to="/tester">Controller Tester</Link>
         </Menu.Item>
+        <Menu.Item key="docs">
+          <Link to="/docs">Docs</Link>
+        </Menu.Item>
       </Menu>
     </Header>
   );

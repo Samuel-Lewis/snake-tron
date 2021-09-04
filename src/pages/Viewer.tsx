@@ -1,13 +1,46 @@
-import { Button, Divider, message, Table, TableProps, Tag, Tooltip, Typography } from "antd";
-import React, { useEffect, useMemo, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Button, Divider, message, Modal, Table, TableProps, Tag, Tooltip, Typography } from "antd";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { DeleteOutlined, DownloadOutlined, EyeOutlined } from "@ant-design/icons";
 import { GameHistory, GameResult } from "../engine/types";
-import { getHistories, removeHistory } from "../store";
+import { clearHistories, getHistories, removeHistory } from "../store";
 import { createDownloadHref } from "../store/download";
 import { Viewer } from "../viewer/Viewer";
 
-const { Title } = Typography;
+const { Title, Paragraph } = Typography;
+
+type DeleteAllModalProps = {
+  onDelete: () => void;
+};
+const DeleteAllModal: React.FunctionComponent<DeleteAllModalProps> = ({
+  onDelete,
+}) => {
+  const openModal = useCallback(() => {
+    Modal.warning({
+      title: "Are you sure you want to delete all game replays?",
+      closable: true,
+      okText: "Delete all",
+      okCancel: true,
+      okButtonProps: {
+        danger: true,
+        type: "primary",
+      },
+      content: (
+        <Paragraph>
+          Are you sure you want to delete all game replays? This can not be
+          undone.
+        </Paragraph>
+      ),
+      onOk: onDelete,
+    });
+  }, [onDelete]);
+
+  return (
+    <Button icon={<DeleteOutlined />} onClick={openModal} danger type="text">
+      Delete all histories
+    </Button>
+  );
+};
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
@@ -16,11 +49,19 @@ const useQuery = () => {
 export type ViewerPageProps = {};
 
 export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
+  const routerHistory = useHistory();
   const [savedGames, setSavedGames] = useState<GameHistory[]>(
     getHistories().reverse()
   );
   const [loadedHistory, setLoadedHistory] = useState<GameHistory | undefined>();
   const query = useQuery();
+
+  const deleteAll = useCallback(() => {
+    setLoadedHistory(undefined);
+    clearHistories();
+    setSavedGames(getHistories());
+    routerHistory.push("/viewer");
+  }, [setLoadedHistory, routerHistory]);
 
   useEffect(() => {
     const id = query.get("gameId");
@@ -75,23 +116,20 @@ export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
           a.result.localeCompare(b.result),
         multiple: 2,
       },
-      render(value: GameResult) {
+      render(value: GameResult, record) {
+        const player = record.winner;
         const colour =
           value === GameResult.WINNER
             ? "green"
             : value === GameResult.DRAW
             ? "blue"
             : "red";
-        return <Tag color={colour}>{value}</Tag>;
-      },
-    },
-    {
-      title: "Winner",
-      dataIndex: "winner",
-      key: "winner",
-      sorter: {
-        compare: (a: GameHistory, b: GameHistory) => a.winner - b.winner,
-        multiple: 3,
+        return (
+          <>
+            <Tag color={colour}>{value}</Tag>
+            {player !== -1 && <span>Player {player}</span>}
+          </>
+        );
       },
     },
     {
@@ -157,6 +195,7 @@ export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
                   setSavedGames(getHistories());
                   if (loadedHistory && loadedHistory.gameId === record.gameId) {
                     setLoadedHistory(undefined);
+                    routerHistory.push("/viewer");
                   }
                 }}
                 icon={<DeleteOutlined />}
@@ -184,6 +223,8 @@ export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
           showTotal: (total) => `${total} games`,
         }}
       />
+
+      <DeleteAllModal onDelete={deleteAll} />
     </>
   );
 };

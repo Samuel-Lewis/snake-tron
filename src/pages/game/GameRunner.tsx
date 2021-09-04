@@ -90,7 +90,11 @@ export const GameRunner: React.FunctionComponent<GamePageProps> = () => {
         />
       )}
       {currentStage === SetupStage.SUMMARY && (
-        <Summary gameHistory={gameHistory} onNext={nextCallback} />
+        <Summary
+          gameHistory={gameHistory}
+          onNext={nextCallback}
+          onPrev={prevCallback}
+        />
       )}
     </>
   );

@@ -13,7 +13,7 @@ export type MetalessGameState = Omit<GameState, "meta">;
 export type GameHistory = {
   tickCount: number;
   ticks: MetalessGameState[];
-  winner: number;
+  winner: number | null;
   result: GameResult;
   gridSize: number;
   playerCount: number;

@@ -14,6 +14,7 @@ export const getHistories = (): GameHistory[] => {
 
 export const addHistory = (history: GameHistory): void => {
   const histories = store.get(StoreKeys.HISTORIES) || {};
+
   store.set(StoreKeys.HISTORIES, { ...histories, [history.gameId]: history });
 };
 
@@ -22,4 +23,8 @@ export const removeHistory = (id: string): GameHistory[] => {
   histories[id] = undefined;
   store.set(StoreKeys.HISTORIES, histories);
   return getHistories();
+};
+
+export const clearHistories = (): void => {
+  store.set(StoreKeys.HISTORIES, {});
 };
