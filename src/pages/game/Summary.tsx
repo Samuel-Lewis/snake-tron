@@ -1,8 +1,8 @@
 import { Button, Collapse, Divider, Result, Space, Typography } from "antd";
-import React, { useEffect } from "react";
+import React, { useCallback } from "react";
 import { Link } from "react-router-dom";
 import {
-    DownloadOutlined, EyeOutlined, HourglassOutlined, MehOutlined, TrophyOutlined
+    DownloadOutlined, EyeOutlined, HourglassOutlined, MehOutlined, SaveOutlined, TrophyOutlined
 } from "@ant-design/icons";
 import { GameHistory, GameResult } from "../../engine/types";
 import { addHistory } from "../../store";
@@ -19,11 +19,12 @@ export type SummaryProps = {
 
 export const Summary: React.FunctionComponent<SummaryProps> = (props) => {
   const { gameHistory, onNext, onPrev } = props;
-  useEffect(() => {
+  const onSave = useCallback(() => {
     if (gameHistory) {
       addHistory(gameHistory);
     }
-  });
+  }, [gameHistory]);
+
   if (!gameHistory) {
     return <div>Error: No game history specified</div>;
   }
@@ -56,6 +57,9 @@ export const Summary: React.FunctionComponent<SummaryProps> = (props) => {
         <Link to={`/viewer?gameId=${gameHistory?.gameId}`}>
           <Button icon={<EyeOutlined />}>Show in viewer</Button>
         </Link>
+        <Button icon={<SaveOutlined />} onClick={onSave}>
+          Save to local storage
+        </Button>
         <Button icon={<DownloadOutlined />} {...downloadProps}>
           Download replay
         </Button>
