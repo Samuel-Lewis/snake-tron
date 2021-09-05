@@ -1,8 +1,18 @@
-import { Alert, Button, Progress, ProgressProps, Space, Typography } from "antd";
+import {
+    Alert,
+    Button,
+    Progress,
+    ProgressProps,
+    Space,
+    Typography
+} from "antd";
 import React from "react";
 import { Controller } from "../../controller/types";
 import { Game } from "../../engine/game";
-import { GameHistory, GameOptions } from "../../engine/types";
+import {
+    GameHistory,
+    GameOptions
+} from "../../engine/types";
 
 const { Title } = Typography;
 

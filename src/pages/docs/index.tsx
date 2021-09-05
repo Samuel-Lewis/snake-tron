@@ -1,6 +1,15 @@
-import { Layout, Menu, Typography } from "antd";
+import {
+    Layout,
+    Menu,
+    Typography
+} from "antd";
 import React from "react";
-import { Link, Route, Switch, useRouteMatch } from "react-router-dom";
+import {
+    Link,
+    Route,
+    Switch,
+    useRouteMatch
+} from "react-router-dom";
 import { RestDocs } from "./controllers/Rest";
 import { DataTypes } from "./DataTypes";
 import { GettingStarted } from "./GettingStarted";

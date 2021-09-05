@@ -3,8 +3,18 @@ import { cloneDeep } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Controller } from "../controller/types";
 import { PositionPool } from "./PositionPool";
-import { GameOptions, GameState, isPos, Move, Pos } from "./types";
-import { gameHistorySummarise, moveToVector2d, withinBounds } from "./utils";
+import {
+    GameOptions,
+    GameState,
+    isPos,
+    Move,
+    Pos
+} from "./types";
+import {
+    gameHistorySummarise,
+    moveToVector2d,
+    withinBounds
+} from "./utils";
 
 const defaultOptions: GameOptions = {
   gridSize: 50,

@@ -1,8 +1,25 @@
-import { Button, Col, Divider, Row, Space, Tabs, Typography } from "antd";
-import React, { useCallback, useState } from "react";
+import {
+    Button,
+    Col,
+    Divider,
+    Row,
+    Space,
+    Tabs,
+    Typography
+} from "antd";
+import React, {
+    useCallback,
+    useState
+} from "react";
 import { RestControllerFactory } from "../controller/adapters/rest";
-import { Controller, InitPayload } from "../controller/types";
-import { GameState, Move } from "../engine/types";
+import {
+    Controller,
+    InitPayload
+} from "../controller/types";
+import {
+    GameState,
+    Move
+} from "../engine/types";
 
 const { TabPane } = Tabs;
 const { Title, Paragraph } = Typography;

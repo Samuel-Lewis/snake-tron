@@ -1,5 +1,11 @@
-import React, { useLayoutEffect, useRef } from "react";
-import { MetalessGameState, Pos } from "../engine/types";
+import React, {
+    useLayoutEffect,
+    useRef
+} from "react";
+import {
+    MetalessGameState,
+    Pos
+} from "../engine/types";
 import { getColour } from "../theme";
 
 const CANVAS_SIZE = 400;

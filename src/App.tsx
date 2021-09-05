@@ -1,7 +1,10 @@
 import "antd/dist/antd.css";
 import "./App.less";
 import { Layout } from "antd";
-import { Route, Switch } from "react-router-dom";
+import {
+    Route,
+    Switch
+} from "react-router-dom";
 import { DocsPage } from "./pages/docs";
 import { GameRunner } from "./pages/game";
 import { HomePage } from "./pages/Home";

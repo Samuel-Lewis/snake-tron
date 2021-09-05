@@ -1,5 +1,13 @@
-import { Button, Form, InputNumber, Space } from "antd";
-import React, { useCallback, useEffect } from "react";
+import {
+    Button,
+    Form,
+    InputNumber,
+    Space
+} from "antd";
+import React, {
+    useCallback,
+    useEffect
+} from "react";
 import { GameOptions } from "../../engine/types";
 
 export type GameSetupProps = {

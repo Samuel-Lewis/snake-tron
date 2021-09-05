@@ -1,5 +1,12 @@
-import { Col, Row, Slider } from "antd";
-import React, { useCallback, useState } from "react";
+import {
+    Col,
+    Row,
+    Slider
+} from "antd";
+import React, {
+    useCallback,
+    useState
+} from "react";
 import { GameHistory } from "../engine/types";
 import { Canvas } from "./Canvas";
 import { StateSnapshot } from "./Snapshot";

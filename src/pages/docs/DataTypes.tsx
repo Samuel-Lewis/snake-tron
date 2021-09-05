@@ -1,4 +1,8 @@
-import { Divider, Table, Typography } from "antd";
+import {
+    Divider,
+    Table,
+    Typography
+} from "antd";
 import React from "react";
 import { MD } from "./markdown";
 

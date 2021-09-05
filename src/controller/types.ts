@@ -1,5 +1,8 @@
 import React from "react";
-import { GameState, Move } from "../engine/types";
+import {
+    GameState,
+    Move
+} from "../engine/types";
 
 export type InitPayload = {
   gameId: string;

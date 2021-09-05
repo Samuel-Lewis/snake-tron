@@ -1,10 +1,41 @@
-import { Button, Divider, message, Modal, Table, TableProps, Tag, Tooltip, Typography } from "antd";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useHistory, useLocation } from "react-router-dom";
-import { DeleteOutlined, DownloadOutlined, EyeOutlined } from "@ant-design/icons";
-import { GameHistory, GameResult } from "../engine/types";
-import { clearHistories, getHistories, removeHistory } from "../store";
+import {
+    Button,
+    Divider,
+    message,
+    Modal,
+    notification,
+    Table,
+    TableProps,
+    Tag,
+    Tooltip,
+    Typography
+} from "antd";
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useState
+} from "react";
+import {
+    Link,
+    useHistory,
+    useLocation
+} from "react-router-dom";
+import {
+    DeleteOutlined,
+    DownloadOutlined,
+    EyeOutlined
+} from "@ant-design/icons";
+import {
+    GameHistory,
+    GameResult
+} from "../engine/types";
 import { createDownloadHref } from "../store/download";
+import {
+    deleteAllHistories,
+    deleteHistory,
+    getHistories
+} from "../store/history";
 import { Viewer } from "../viewer/Viewer";
 
 const { Title, Paragraph } = Typography;
@@ -50,47 +81,89 @@ export type ViewerPageProps = {};
 
 export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
   const routerHistory = useHistory();
-  const [savedGames, setSavedGames] = useState<GameHistory[]>(
-    getHistories().reverse()
-  );
+  const [loadedHistories, setLoadedHistories] = useState<GameHistory[]>([]);
   const [loadedHistory, setLoadedHistory] = useState<GameHistory | undefined>();
   const query = useQuery();
 
-  const deleteAll = useCallback(() => {
-    setLoadedHistory(undefined);
-    clearHistories();
-    setSavedGames(getHistories());
-    routerHistory.push("/viewer");
-  }, [setLoadedHistory, routerHistory]);
+  const loadHistories = useCallback(async () => {
+    getHistories()
+      .then((histories) => {
+        if (histories.length !== loadedHistories.length) {
+          setLoadedHistories(histories);
+        }
+      })
+      .catch((e) => {
+        notification.error({
+          message: "Failed to load all histories",
+          description: e.message,
+        });
+      });
+  }, [loadedHistories]);
 
   useEffect(() => {
+    loadHistories();
     const id = query.get("gameId");
-    if (!id) {
+    if (!id || loadedHistories.length === 0) {
+      setLoadedHistory(undefined);
       return;
     }
 
-    if (id === "latest") {
-      setLoadedHistory(savedGames[0]);
-      return;
-    }
-
-    const selected = savedGames.find((h) => h.gameId === id);
+    const selected = loadedHistories.find((h) => h.gameId === id);
     if (selected) {
-      setLoadedHistory(selected);
+      if (selected.gameId !== loadedHistory?.gameId) {
+        setLoadedHistory(selected);
+      }
       return;
+    } else {
+      message.error(`Could not find game ${id}`);
     }
+  }, [loadedHistories, loadedHistory, setLoadedHistory, loadHistories, query]);
 
-    message.error(`Could not find game ${id}`);
-  }, [savedGames, setLoadedHistory, query]);
+  const deleteAll = useCallback(async () => {
+    deleteAllHistories()
+      .then(() => {
+        setLoadedHistory(undefined);
+        setLoadedHistories([]);
+        routerHistory.push("/viewer");
+      })
+      .catch((e) => {
+        notification.error({
+          message: "Failed to delete all histories",
+          description: e.message,
+        });
+      });
+  }, [setLoadedHistory, setLoadedHistories, routerHistory]);
+
+  const deleteSingleHistory = useCallback(
+    async (gameId: string) => {
+      deleteHistory(gameId)
+        .then(() => {
+          if (loadedHistory?.gameId === gameId) {
+            setLoadedHistory(undefined);
+            loadHistories();
+            routerHistory.push("/viewer");
+            return;
+          }
+          loadHistories();
+        })
+        .catch((e) => {
+          notification.error({
+            message: "Failed to delete history",
+            description: e.message,
+          });
+        });
+    },
+    [loadedHistory, setLoadedHistory, routerHistory, loadHistories]
+  );
 
   const dataSource = useMemo(() => {
-    return savedGames.map((game) => {
+    return loadedHistories.map((game) => {
       return {
         ...game,
         key: game.gameId,
       };
     });
-  }, [savedGames]);
+  }, [loadedHistories]);
 
   const columns: TableProps<GameHistory>["columns"] = [
     {
@@ -190,14 +263,7 @@ export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
             </Tooltip>
             <Tooltip title="Delete">
               <Button
-                onClick={() => {
-                  removeHistory(record.gameId);
-                  setSavedGames(getHistories());
-                  if (loadedHistory && loadedHistory.gameId === record.gameId) {
-                    setLoadedHistory(undefined);
-                    routerHistory.push("/viewer");
-                  }
-                }}
+                onClick={() => deleteSingleHistory(record.gameId)}
                 icon={<DeleteOutlined />}
               />
             </Tooltip>

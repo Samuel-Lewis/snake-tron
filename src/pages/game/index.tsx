@@ -1,7 +1,16 @@
-import { Steps, Typography } from "antd";
-import React, { useCallback, useState } from "react";
+import {
+    Steps,
+    Typography
+} from "antd";
+import React, {
+    useCallback,
+    useState
+} from "react";
 import { Controller } from "../../controller/types";
-import { GameHistory, GameOptions } from "../../engine/types";
+import {
+    GameHistory,
+    GameOptions
+} from "../../engine/types";
 import { ControllerCreator } from "./ControllerCreator";
 import { Run } from "./Run";
 import { GameSetup } from "./Setup";

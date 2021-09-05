@@ -1,4 +1,7 @@
-import { Layout, Menu } from "antd";
+import {
+    Layout,
+    Menu
+} from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
 

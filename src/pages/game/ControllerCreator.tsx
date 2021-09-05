@@ -1,9 +1,26 @@
-import { Button, Divider, Form, Space, Tooltip } from "antd";
+import {
+    Button,
+    Divider,
+    Form,
+    Space,
+    Tooltip
+} from "antd";
 import { uniqueId } from "lodash";
-import React, { useCallback, useMemo, useState } from "react";
-import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import React, {
+    useCallback,
+    useMemo,
+    useState
+} from "react";
+import {
+    DeleteOutlined,
+    PlusOutlined
+} from "@ant-design/icons";
 import { RestControllerFactory } from "../../controller/adapters/rest";
-import { Controller, ControllerFactory, isController } from "../../controller/types";
+import {
+    Controller,
+    ControllerFactory,
+    isController
+} from "../../controller/types";
 
 export type ControllerCreatorProps = {
   onControllerChange: (controllers: Controller[]) => void;

@@ -1,9 +1,17 @@
-import { Form, Input } from "antd";
+import {
+    Form,
+    Input
+} from "antd";
 import axios from "axios";
 import React, { useCallback } from "react";
 import { GlobalOutlined } from "@ant-design/icons";
 import { GameState } from "../../engine/types";
-import { Controller, ControllerFactory, ControllerSelector, InitPayload } from "../types";
+import {
+    Controller,
+    ControllerFactory,
+    ControllerSelector,
+    InitPayload
+} from "../types";
 
 const axiosOptions = {
   headers: { "Access-Control-Allow-Origin": "*" },

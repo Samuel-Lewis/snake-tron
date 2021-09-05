@@ -1,5 +1,12 @@
-import { flatten, isEqual } from "lodash";
-import { GameState, isPos, Pos } from "./types";
+import {
+    flatten,
+    isEqual
+} from "lodash";
+import {
+    GameState,
+    isPos,
+    Pos
+} from "./types";
 
 export class PositionPool {
   private gameState: GameState;
