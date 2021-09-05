@@ -30,11 +30,11 @@ const sampleStateData: GameState = {
     ],
   ],
   lastMoves: [Move.NORTH, Move.SOUTH],
-  food: [
+  foodPositions: [
     [35, 16],
     [17, 6],
   ],
-  playerAlive: [true, true],
+  playersAlive: [true, true],
   meta: {
     playerCount: 2,
     gameId: dummyId,

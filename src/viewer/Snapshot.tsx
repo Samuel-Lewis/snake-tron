@@ -17,12 +17,12 @@ export const StateSnapshot: React.FunctionComponent<StateSnapshotProps> = ({
   if (!frame) {
     return null;
   }
-  const playerData = new Array(frame.playerAlive.length)
+  const playerData = new Array(frame.playersAlive.length)
     .fill(null)
     .map((_, i) => {
       return {
         key: `Player ${i}`,
-        alive: frame.playerAlive[i],
+        alive: frame.playersAlive[i],
         lastMove: frame.lastMoves[i],
         position: frame.positions[i],
         playerNumber: i,
@@ -70,7 +70,7 @@ export const StateSnapshot: React.FunctionComponent<StateSnapshotProps> = ({
   return (
     <>
       <Paragraph>Tick: {frame.tick}</Paragraph>
-      <Paragraph>Food: {JSON.stringify(frame.food)}</Paragraph>
+      <Paragraph>Food: {JSON.stringify(frame.foodPositions)}</Paragraph>
       <Table
         size="small"
         dataSource={playerData}

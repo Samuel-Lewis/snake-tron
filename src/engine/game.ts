@@ -2,7 +2,7 @@ import { notification } from "antd";
 import { cloneDeep } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Controller } from "../controller/types";
-import { PositionPool } from "./positionPool";
+import { PositionPool } from "./PositionPool";
 import { GameOptions, GameState, isPos, Move, Pos } from "./types";
 import { gameHistorySummarise, moveToVector2d, withinBounds } from "./utils";
 
@@ -53,7 +53,7 @@ export class Game {
 
     const allStates: GameState[] = [];
     while (
-      this.gameState.playerAlive.filter((p) => p).length > 1 &&
+      this.gameState.playersAlive.filter((p) => p).length > 1 &&
       this.gameState.tick < this.options.maxTicks
     ) {
       const copy = cloneDeep(this.gameState);
@@ -67,7 +67,7 @@ export class Game {
 
     await Promise.all(
       this.controllers.map(async (c, i) => await c.end(this.gameState, i))
-    );
+    ).catch(() => {});
 
     return gameHistorySummarise(allStates);
   }
@@ -81,8 +81,8 @@ export class Game {
       tick: 0,
       positions: [],
       lastMoves: [],
-      food: [],
-      playerAlive: new Array(playerCount).fill(true),
+      foodPositions: [],
+      playersAlive: new Array(playerCount).fill(true),
       meta: {
         playerCount,
         gameId: uuidv4(),
@@ -95,14 +95,16 @@ export class Game {
     newState.positions = new Array(playerCount)
       .fill(null)
       .map(() => [posPool.next()]);
-    newState.food = new Array(playerCount).fill(null).map(() => posPool.next());
+    newState.foodPositions = new Array(playerCount)
+      .fill(null)
+      .map(() => posPool.next());
     return newState;
   }
 
   public async update() {
     const controllerMoves = await Promise.all(
       this.controllers.map(async (c, i) => {
-        if (this.gameState.playerAlive[i]) {
+        if (this.gameState.playersAlive[i]) {
           return await c.update(this.gameState, i).catch(() => null);
         } else {
           return Move.NOP;
@@ -125,7 +127,7 @@ export class Game {
 
     const newHeads = controllerMoves.map((move, player) => {
       if (move === Move.NOP) {
-        newState.playerAlive[player] = false;
+        newState.playersAlive[player] = false;
         return null;
       }
 
@@ -135,11 +137,11 @@ export class Game {
           description: `Player ${player} has been disqualified. Either the controller has crashed or it returned an invalid move.`,
           duration: 0,
         });
-        newState.playerAlive[player] = false;
+        newState.playersAlive[player] = false;
         return null;
       }
 
-      if (!oldState.playerAlive[player]) {
+      if (!oldState.playersAlive[player]) {
         return null;
       }
 
@@ -155,7 +157,7 @@ export class Game {
         return;
       }
       if (!withinBounds(head, newState.meta.gridSize)) {
-        newState.playerAlive[player] = false;
+        newState.playersAlive[player] = false;
       }
     });
 
@@ -170,7 +172,7 @@ export class Game {
 
       // Collides with more than self
       if (collides > 1) {
-        newState.playerAlive[player] = false;
+        newState.playersAlive[player] = false;
       }
     });
 
@@ -180,7 +182,7 @@ export class Game {
       if (head === null) {
         return;
       }
-      const collides = newState.food.findIndex(
+      const collides = newState.foodPositions.findIndex(
         (p) => p !== null && p[0] === head[0] && p[1] === head[1]
       );
 
@@ -203,7 +205,7 @@ export class Game {
         (p) => p !== null && p[0] === head[0] && p[1] === head[1]
       );
       if (collides !== -1) {
-        newState.playerAlive[player] = false;
+        newState.playersAlive[player] = false;
       }
     });
 
@@ -217,7 +219,7 @@ export class Game {
 
     // Replace eaten food
     const positionPool = new PositionPool(newState);
-    newState.food = newState.food
+    newState.foodPositions = newState.foodPositions
       .map((p, i) => {
         if (eatenFoodIndex.has(i)) {
           if (positionPool.empty()) {

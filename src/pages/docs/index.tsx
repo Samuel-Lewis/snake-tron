@@ -1,10 +1,11 @@
 import { Layout, Menu, Typography } from "antd";
 import React from "react";
 import { Link, Route, Switch, useRouteMatch } from "react-router-dom";
-import { LifeCycle } from "./lifeCycle";
-import { Placeholder } from "./placeholder";
+import { RestDocs } from "./controllers/Rest";
+import { DataTypes } from "./DataTypes";
+import { GettingStarted } from "./GettingStarted";
+import { LifeCycle } from "./LifeCycle";
 
-const { SubMenu } = Menu;
 const { Title } = Typography;
 const { Content, Sider } = Layout;
 
@@ -14,41 +15,26 @@ type ContentsItem = {
   component?: React.ComponentType<any>;
   children?: ContentsItem[];
   icon?: JSX.Element;
+  display?: boolean;
 };
 
 const contents: ContentsItem[] = [
-  { title: "Getting started", key: "getting-started", component: Placeholder },
-  { title: "Life cylce", key: "life-cycle", component: LifeCycle },
+  {
+    title: "Getting started",
+    key: "getting-started",
+    display: false,
+    component: GettingStarted,
+  },
+  { title: "Life cycle", key: "life-cycle", component: LifeCycle },
+  { title: "Data Types", key: "data-types", component: DataTypes },
   {
     title: "Controllers",
     key: "controllers",
-    children: [{ title: "REST", key: "rest", component: Placeholder }],
+    children: [{ title: "REST", key: "rest", component: RestDocs }],
   },
 ];
 
 type ItemMenusProps = { contents: ContentsItem[]; url: string };
-const ItemMenus: React.FunctionComponent<ItemMenusProps> = (props) => {
-  const { contents, url } = props;
-  const c = contents.map(({ children, title, key, icon, component }) => {
-    if (children) {
-      return (
-        <SubMenu key={key} title={title} icon={icon}>
-          <ItemMenus contents={children} url={`${url}/${key}`} />
-        </SubMenu>
-      );
-    } else if (component) {
-      return (
-        <Menu.Item key={key} icon={icon}>
-          <Link to={`${url}/${key}`}>{title}</Link>
-        </Menu.Item>
-      );
-    }
-    return null;
-  });
-  console.groupEnd();
-  return <>{c}</>;
-};
-
 type ItemRouteProps = { contents: ContentsItem[]; url: string };
 const ItemRoute: React.FunctionComponent<ItemRouteProps> = (props) => {
   const allRoutes: JSX.Element[] = [];
@@ -58,7 +44,11 @@ const ItemRoute: React.FunctionComponent<ItemRouteProps> = (props) => {
         dfs(children, `${parentUrl}/${key}`);
       } else if (component) {
         allRoutes.push(
-          <Route key={key} path={`${parentUrl}/${key}`} component={component} />
+          <Route
+            key={`route-${key}`}
+            path={`${parentUrl}/${key}`}
+            component={component}
+          />
         );
       }
     });
@@ -70,8 +60,29 @@ const ItemRoute: React.FunctionComponent<ItemRouteProps> = (props) => {
 
 export const DocsPage: React.FunctionComponent = () => {
   let { url } = useRouteMatch();
+  const createItemMenus = ({ contents: cont, url: u }: ItemMenusProps) => {
+    const c = cont.map(({ children, title, key, icon, component, display }) => {
+      if (display === false) {
+        return null;
+      } else if (children) {
+        return (
+          <Menu.SubMenu key={key} title={title} icon={icon}>
+            {createItemMenus({ contents: children, url: `${u}/${key}` })}
+          </Menu.SubMenu>
+        );
+      } else if (component) {
+        return (
+          <Menu.Item key={`${u}/${key}`} icon={icon}>
+            <Link to={`${u}/${key}`}>{title}</Link>
+          </Menu.Item>
+        );
+      }
+      return null;
+    });
+    return <>{c}</>;
+  };
 
-  const itemMenus = <ItemMenus contents={contents} url={url} />;
+  const itemMenus = createItemMenus({ contents, url });
   const itemRoutes = <ItemRoute contents={contents} url={url} />;
 
   return (
@@ -79,12 +90,7 @@ export const DocsPage: React.FunctionComponent = () => {
       <Title>Docs</Title>
       <Layout>
         <Sider width={200}>
-          <Menu
-            selectable={false}
-            mode="inline"
-            style={{ height: "100%" }}
-            multiple={false}
-          >
+          <Menu mode="inline" style={{ height: "100%" }} multiple={false}>
             {itemMenus}
           </Menu>
         </Sider>

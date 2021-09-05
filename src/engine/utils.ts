@@ -25,7 +25,7 @@ export const withinBounds = (pos: Pos, bounds: number): boolean => {
 export const gameHistorySummarise = (history: GameState[]): GameHistory => {
   const lastFrame = history[history.length - 1];
   const meta = lastFrame.meta;
-  const winnerCount = lastFrame.playerAlive.filter((p) => p).length;
+  const winnerCount = lastFrame.playersAlive.filter((p) => p).length;
   const result =
     winnerCount > 1
       ? GameResult.TIMEOUT
@@ -35,7 +35,7 @@ export const gameHistorySummarise = (history: GameState[]): GameHistory => {
 
   let winner = null;
   if (result === GameResult.WINNER) {
-    winner = lastFrame.playerAlive.findIndex((p) => p);
+    winner = lastFrame.playersAlive.findIndex((p) => p);
   }
   const ticks = history.map((h) => omit(h, ["meta"]));
   const timeStamp = new Date().toISOString();

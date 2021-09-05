@@ -11,9 +11,9 @@ export class PositionPool {
   }
 
   private generatePool = () => {
-    const { positions, meta, food } = this.gameState;
+    const { positions, meta, foodPositions } = this.gameState;
     const width = meta.gridSize;
-    const taken = flatten(positions).concat(food);
+    const taken = flatten(positions).concat(foodPositions);
     return new Array(width * width)
       .fill(0)
       .map((_, i) => [i % width, Math.floor(i / width)])

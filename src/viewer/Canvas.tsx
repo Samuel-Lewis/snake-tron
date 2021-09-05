@@ -77,7 +77,7 @@ export const Canvas: React.FunctionComponent<CanvasProps> = (props) => {
     state.positions.forEach((player, i) => {
       drawSnake(ctx, partSize, player, i);
     });
-    state.food.forEach((pos) => drawFood(ctx, partSize, pos));
+    state.foodPositions.forEach((pos) => drawFood(ctx, partSize, pos));
   }, [canvasRef, state, gridSize]);
 
   return <canvas width={CANVAS_SIZE} height={CANVAS_SIZE} ref={canvasRef} />;

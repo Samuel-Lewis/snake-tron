@@ -36,8 +36,8 @@ export type Pos = [number, number];
 export type GameState = {
   tick: number;
   positions: Array<Pos[]>;
-  food: Pos[];
-  playerAlive: boolean[];
+  foodPositions: Pos[];
+  playersAlive: boolean[];
   lastMoves: Move[];
   meta: {
     gridSize: number;
