@@ -24,7 +24,7 @@ export const HomePage: React.FunctionComponent<HomePageProps> = (props) => {
         <a href="https://en.wikipedia.org/wiki/Tron_(video_game)">Tron</a>.
         Where two or more players are on a grid, trying to cause the other
         players to crash. A player is able to strengthen themselves by
-        collecting food, which increases their bike's trail by one.Last player
+        collecting food, which increases their bike's trail by one. Last player
         surviving wins!
       </Paragraph>
     </>
