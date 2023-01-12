@@ -1,42 +1,32 @@
 import {
-    Button,
-    Divider,
-    message,
-    Modal,
-    notification,
-    Table,
-    TableProps,
-    Tag,
-    Tooltip,
-    Typography
+  Button,
+  Divider,
+  message,
+  Modal,
+  notification,
+  Space,
+  Table,
+  TableProps,
+  Tag,
+  Tooltip,
+  Typography,
 } from "antd";
-import React, {
-    useCallback,
-    useEffect,
-    useMemo,
-    useState
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import {
-    Link,
-    useHistory,
-    useLocation
-} from "react-router-dom";
-import {
-    DeleteOutlined,
-    DownloadOutlined,
-    EyeOutlined
+  DeleteOutlined,
+  DownloadOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
-import {
-    GameHistory,
-    GameResult
-} from "../engine/types";
+import { GameHistory, GameResult } from "../engine/types";
 import { createDownloadHref } from "../store/download";
 import {
-    deleteAllHistories,
-    deleteHistory,
-    getHistories
+  deleteAllHistories,
+  deleteHistory,
+  getHistories,
 } from "../store/history";
 import { Viewer } from "../viewer/Viewer";
+import { exampleGame } from "./example";
 
 const { Title, Paragraph } = Typography;
 
@@ -81,15 +71,17 @@ export type ViewerPageProps = {};
 
 export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
   const routerHistory = useHistory();
-  const [loadedHistories, setLoadedHistories] = useState<GameHistory[]>([]);
+  const [loadedHistories, setLoadedHistories] = useState<GameHistory[]>([
+    exampleGame,
+  ]);
   const [loadedHistory, setLoadedHistory] = useState<GameHistory | undefined>();
   const query = useQuery();
 
   const loadHistories = useCallback(async () => {
     getHistories()
       .then((histories) => {
-        if (histories.length !== loadedHistories.length) {
-          setLoadedHistories(histories);
+        if (histories.length !== loadedHistories.length - 1) {
+          setLoadedHistories([exampleGame, ...histories]);
         }
       })
       .catch((e) => {
@@ -251,7 +243,7 @@ export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
         const { key, humanDate, ...rest } = record;
         const downloadProps = createDownloadHref(rest);
         return (
-          <>
+          <Space>
             <Tooltip title="View">
               <Link to={`/viewer?gameId=${rest.gameId}`}>
                 <Button icon={<EyeOutlined />} />
@@ -261,13 +253,14 @@ export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
             <Tooltip title="Download">
               <Button icon={<DownloadOutlined />} {...downloadProps} />
             </Tooltip>
+
             <Tooltip title="Delete">
               <Button
                 onClick={() => deleteSingleHistory(record.gameId)}
                 icon={<DeleteOutlined />}
               />
             </Tooltip>
-          </>
+          </Space>
         );
       },
     },

@@ -1,11 +1,5 @@
-import React, {
-    useLayoutEffect,
-    useRef
-} from "react";
-import {
-    MetalessGameState,
-    Pos
-} from "../engine/types";
+import React, { useLayoutEffect, useRef } from "react";
+import { MetalessGameState, Pos } from "../engine/types";
 import { getColour } from "../theme";
 
 const CANVAS_SIZE = 400;
@@ -30,7 +24,8 @@ function drawSnake(
   ctx: CanvasRenderingContext2D,
   partSize: number,
   snake: Pos[],
-  player: number
+  player: number,
+  alive: boolean = true
 ) {
   const colour = getColour(player);
   const [headX, headY] = posToCanvas(snake[0], partSize);
@@ -38,6 +33,9 @@ function drawSnake(
   ctx.lineWidth = partSize - 2;
   ctx.strokeStyle = colour;
   ctx.lineCap = "square";
+
+  ctx.globalAlpha = alive ? 1 : 0.5;
+
   ctx.beginPath();
   ctx.moveTo(headX, headY);
 
@@ -47,6 +45,7 @@ function drawSnake(
   });
 
   ctx.stroke();
+  ctx.globalAlpha = 1;
 }
 
 const drawFood = (
@@ -81,7 +80,7 @@ export const Canvas: React.FunctionComponent<CanvasProps> = (props) => {
     clearCanvas(ctx);
 
     state.positions.forEach((player, i) => {
-      drawSnake(ctx, partSize, player, i);
+      drawSnake(ctx, partSize, player, i, state.playersAlive[i]);
     });
     state.foodPositions.forEach((pos) => drawFood(ctx, partSize, pos));
   }, [canvasRef, state, gridSize]);
