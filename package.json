@@ -1,7 +1,7 @@
 {
   "name": "snake-tron",
   "version": "0.1.0",
-  "homepage": "https://samuel-lewis.com/snake-tron",
+  "homepage": "https://snake-tron.samuel-lewis.com",
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.6.3",
