@@ -3,7 +3,7 @@ import React from "react";
 
 const { Footer } = Layout;
 
-export const FooterPart: React.FunctionComponent = () => {
+export const FooterPart: React.FC = () => {
   return (
     <Footer className="footer">
       Created by{" "}

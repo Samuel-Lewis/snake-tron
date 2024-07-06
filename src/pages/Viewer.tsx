@@ -33,9 +33,7 @@ const { Title, Paragraph } = Typography;
 type DeleteAllModalProps = {
   onDelete: () => void;
 };
-const DeleteAllModal: React.FunctionComponent<DeleteAllModalProps> = ({
-  onDelete,
-}) => {
+const DeleteAllModal: React.FC<DeleteAllModalProps> = ({ onDelete }) => {
   const openModal = useCallback(() => {
     Modal.warning({
       title: "Are you sure you want to delete all game replays?",
@@ -69,7 +67,7 @@ const useQuery = () => {
 
 export type ViewerPageProps = {};
 
-export const ViewerPage: React.FunctionComponent<ViewerPageProps> = () => {
+export const ViewerPage: React.FC<ViewerPageProps> = () => {
   const routerHistory = useHistory();
   const [loadedHistories, setLoadedHistories] = useState<GameHistory[]>([
     exampleGame,

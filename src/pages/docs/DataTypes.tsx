@@ -1,8 +1,4 @@
-import {
-    Divider,
-    Table,
-    Typography
-} from "antd";
+import { Divider, Table, Typography } from "antd";
 import React from "react";
 import { MD } from "./markdown";
 
@@ -137,7 +133,7 @@ const payloadTypes: PayloadType[] = [
   },
 ];
 
-export const DataTypes: React.FunctionComponent = () => {
+export const DataTypes: React.FC = () => {
   const commonTypesRender = commonTypes
     .sort((a, b) => a.key.localeCompare(b.key))
     .map((type) => {

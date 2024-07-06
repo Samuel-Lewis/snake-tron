@@ -1,5 +1,5 @@
 import React from "react";
 
-export const Placeholder: React.FunctionComponent = () => {
+export const Placeholder: React.FC = () => {
   return <>Not implemented...</>;
 };

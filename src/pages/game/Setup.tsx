@@ -1,13 +1,5 @@
-import {
-    Button,
-    Form,
-    InputNumber,
-    Space
-} from "antd";
-import React, {
-    useCallback,
-    useEffect
-} from "react";
+import { Button, Form, InputNumber, Space } from "antd";
+import React, { useCallback, useEffect } from "react";
 import { GameOptions } from "../../engine/types";
 
 export type GameSetupProps = {
@@ -16,7 +8,7 @@ export type GameSetupProps = {
   onPrev: () => void;
 };
 
-export const GameSetup: React.FunctionComponent<GameSetupProps> = ({
+export const GameSetup: React.FC<GameSetupProps> = ({
   onConfigChange,
   onNext,
   onPrev,
@@ -32,7 +24,7 @@ export const GameSetup: React.FunctionComponent<GameSetupProps> = ({
   }, [onConfigChange, gridSize, maxTicks]);
 
   const onMaxTicksChange = useCallback(
-    (value: number) => {
+    (value: number = 0) => {
       setMaxTicks(value);
       changeCallback();
     },
@@ -63,7 +55,7 @@ export const GameSetup: React.FunctionComponent<GameSetupProps> = ({
             max={10000}
             defaultValue={1000}
             value={maxTicks}
-            onChange={onMaxTicksChange}
+            onChange={(n) => onMaxTicksChange(n ?? 0)}
           />
         </Form.Item>
 
@@ -73,7 +65,7 @@ export const GameSetup: React.FunctionComponent<GameSetupProps> = ({
             max={1000}
             defaultValue={50}
             value={gridSize}
-            onChange={onGridSizeChange}
+            onChange={n => onGridSizeChange(n ?? 0)}
           />
         </Form.Item>
       </Form>

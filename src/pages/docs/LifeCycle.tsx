@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const { Title, Paragraph } = Typography;
 
-export const LifeCycle: React.FunctionComponent = () => {
+export const LifeCycle: React.FC = () => {
   return (
     <>
       <Title level={2}>Life Cycle</Title>

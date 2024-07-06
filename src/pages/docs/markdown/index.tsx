@@ -17,7 +17,7 @@ export type MDProps = {
   text: string;
 };
 
-export const MD: React.FunctionComponent<MDProps> = ({ text }) => {
+export const MD: React.FC<MDProps> = ({ text }) => {
   return <ReactMarkdown children={text} components={markdownComponentsMap} />;
 };
 

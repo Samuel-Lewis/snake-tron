@@ -20,9 +20,10 @@ const availableFactories: ControllerFactory[] = [
   BuiltInControllerFactory,
 ];
 
-export const ControllerCreator: React.FunctionComponent<
-  ControllerCreatorProps
-> = ({ onControllerChange, onNext }) => {
+export const ControllerCreator: React.FC<ControllerCreatorProps> = ({
+  onControllerChange,
+  onNext,
+}) => {
   const [factoriesWithID, setFactoriesWithID] = useState<
     Array<{ key: string; factory: ControllerFactory }>
   >([]);

@@ -1,14 +1,11 @@
-import {
-    Button,
-    Typography
-} from "antd";
+import { Button, Typography } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
 import { MD } from "../markdown";
 
 const { Title, Paragraph } = Typography;
 
-export const RestDocs: React.FunctionComponent = () => {
+export const RestDocs: React.FC = () => {
   return (
     <>
       <Title level={2}>REST API</Title>

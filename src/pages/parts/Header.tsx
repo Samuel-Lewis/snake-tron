@@ -1,13 +1,10 @@
-import {
-    Layout,
-    Menu
-} from "antd";
+import { Layout, Menu } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
 
 const { Header } = Layout;
 
-export const HeaderPart: React.FunctionComponent = () => {
+export const HeaderPart: React.FC = () => {
   return (
     <Header className="header">
       <div className="logo"></div>

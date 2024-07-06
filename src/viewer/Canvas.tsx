@@ -60,7 +60,7 @@ const drawFood = (
   ctx.fill();
 };
 
-export const Canvas: React.FunctionComponent<CanvasProps> = (props) => {
+export const Canvas: React.FC<CanvasProps> = (props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { state, gridSize } = props;
 

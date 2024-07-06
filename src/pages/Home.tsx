@@ -5,7 +5,7 @@ const { Title, Paragraph } = Typography;
 
 export type HomePageProps = {};
 
-export const HomePage: React.FunctionComponent<HomePageProps> = (props) => {
+export const HomePage: React.FC<HomePageProps> = (props) => {
   return (
     <>
       <Title>Snake Tron - Code Fights!</Title>

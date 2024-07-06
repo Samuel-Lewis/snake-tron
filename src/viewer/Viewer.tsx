@@ -8,7 +8,7 @@ export type ViewerProps = {
   history?: GameHistory;
 };
 
-export const Viewer: React.FunctionComponent<ViewerProps> = (props) => {
+export const Viewer: React.FC<ViewerProps> = (props) => {
   const { history } = props;
   const [tick, setTick] = useState(0);
   const sliderChange = useCallback((value) => setTick(value), [setTick]);

@@ -10,7 +10,7 @@ import React from "react";
 
 const { Title, Paragraph } = Typography;
 
-export const GettingStarted: React.FunctionComponent = () => {
+export const GettingStarted: React.FC = () => {
   return (
     <>
       <Title level={2}>Getting Started</Title>

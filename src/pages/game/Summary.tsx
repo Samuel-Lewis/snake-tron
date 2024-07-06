@@ -1,25 +1,22 @@
 import {
-    Button,
-    Collapse,
-    Divider,
-    notification,
-    Result,
-    Space,
-    Typography
+  Button,
+  Collapse,
+  Divider,
+  notification,
+  Result,
+  Space,
+  Typography,
 } from "antd";
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
-    DownloadOutlined,
-    EyeOutlined,
-    HourglassOutlined,
-    MehOutlined,
-    TrophyOutlined
+  DownloadOutlined,
+  EyeOutlined,
+  HourglassOutlined,
+  MehOutlined,
+  TrophyOutlined,
 } from "@ant-design/icons";
-import {
-    GameHistory,
-    GameResult
-} from "../../engine/types";
+import { GameHistory, GameResult } from "../../engine/types";
 import { createDownloadHref } from "../../store/download";
 import { addHistory } from "../../store/history";
 
@@ -32,7 +29,7 @@ export type SummaryProps = {
   onPrev: () => void;
 };
 
-export const Summary: React.FunctionComponent<SummaryProps> = (props) => {
+export const Summary: React.FC<SummaryProps> = (props) => {
   const { gameHistory, onNext, onPrev } = props;
   useEffect(() => {
     if (gameHistory) {

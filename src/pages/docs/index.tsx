@@ -1,15 +1,6 @@
-import {
-    Layout,
-    Menu,
-    Typography
-} from "antd";
+import { Layout, Menu, Typography } from "antd";
 import React from "react";
-import {
-    Link,
-    Route,
-    Switch,
-    useRouteMatch
-} from "react-router-dom";
+import { Route, Link, Switch, useRouteMatch } from "react-router-dom";
 import { RestDocs } from "./controllers/Rest";
 import { DataTypes } from "./DataTypes";
 import { GettingStarted } from "./GettingStarted";
@@ -21,7 +12,7 @@ const { Content, Sider } = Layout;
 type ContentsItem = {
   title: string;
   key: string;
-  component?: React.ComponentType<any>;
+  component?: React.FC;
   children?: ContentsItem[];
   icon?: JSX.Element;
   display?: boolean;
@@ -45,7 +36,7 @@ const contents: ContentsItem[] = [
 
 type ItemMenusProps = { contents: ContentsItem[]; url: string };
 type ItemRouteProps = { contents: ContentsItem[]; url: string };
-const ItemRoute: React.FunctionComponent<ItemRouteProps> = (props) => {
+const ItemRoute: React.FC<ItemRouteProps> = (props) => {
   const allRoutes: JSX.Element[] = [];
   const dfs = (contents: ContentsItem[], parentUrl: string) => {
     contents.forEach(({ children, key, component }) => {
@@ -67,7 +58,7 @@ const ItemRoute: React.FunctionComponent<ItemRouteProps> = (props) => {
   return <>{allRoutes}</>;
 };
 
-export const DocsPage: React.FunctionComponent = () => {
+export const DocsPage: React.FC = () => {
   let { url } = useRouteMatch();
   const createItemMenus = ({ contents: cont, url: u }: ItemMenusProps) => {
     const c = cont.map(({ children, title, key, icon, component, display }) => {

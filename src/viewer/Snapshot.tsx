@@ -1,12 +1,6 @@
-import {
-    Table,
-    Typography
-} from "antd";
+import { Table, Typography } from "antd";
 import React from "react";
-import {
-    CheckCircleOutlined,
-    CloseCircleOutlined
-} from "@ant-design/icons";
+import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { MetalessGameState } from "../engine/types";
 import { getColour } from "../theme";
 
@@ -17,9 +11,7 @@ export type StateSnapshotProps = {
   viewedPlayer?: (player: number) => void;
 };
 
-export const StateSnapshot: React.FunctionComponent<StateSnapshotProps> = ({
-  frame,
-}) => {
+export const StateSnapshot: React.FC<StateSnapshotProps> = ({ frame }) => {
   if (!frame) {
     return null;
   }

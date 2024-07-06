@@ -1,8 +1,5 @@
 import React from "react";
-import {
-    GameState,
-    Move
-} from "../engine/types";
+import { GameState, Move } from "../engine/types";
 
 export type InitPayload = {
   gameId: string;
@@ -17,8 +14,7 @@ export interface Controller {
   end: (gameState: GameState, playerNumber?: number) => Promise<void>;
 }
 
-export type ControllerSelector =
-  React.FunctionComponent<ControllerSelectorProps>;
+export type ControllerSelector = React.FC<ControllerSelectorProps>;
 
 export interface ControllerFactory {
   Selector: ControllerSelector;

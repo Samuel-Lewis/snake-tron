@@ -1,25 +1,8 @@
-import {
-    Button,
-    Col,
-    Divider,
-    Row,
-    Space,
-    Tabs,
-    Typography
-} from "antd";
-import React, {
-    useCallback,
-    useState
-} from "react";
+import { Button, Col, Divider, Row, Space, Tabs, Typography } from "antd";
+import React, { useCallback, useState } from "react";
 import { RestControllerFactory } from "../controller/adapters/rest";
-import {
-    Controller,
-    InitPayload
-} from "../controller/types";
-import {
-    GameState,
-    Move
-} from "../engine/types";
+import { Controller, InitPayload } from "../controller/types";
+import { GameState, Move } from "../engine/types";
 
 const { TabPane } = Tabs;
 const { Title, Paragraph } = Typography;
@@ -61,68 +44,67 @@ const sampleStateData: GameState = {
 
 export type ControllerTesterPageProps = {};
 
-export const ControllerTesterPage: React.FunctionComponent<ControllerTesterPageProps> =
-  () => {
-    const [controller, setController] = useState<Controller | null>(null);
-    const [response, setResponse] = useState<string>("");
-    const [sendData, setSendData] = useState<string>("");
+export const ControllerTesterPage: React.FC<ControllerTesterPageProps> = () => {
+  const [controller, setController] = useState<Controller | null>(null);
+  const [response, setResponse] = useState<string>("");
+  const [sendData, setSendData] = useState<string>("");
 
-    const loaderCallback = useCallback(
-      (value) => {
-        setController(RestControllerFactory.create(value));
-      },
-      [setController]
-    );
+  const loaderCallback = useCallback(
+    (value) => {
+      setController(RestControllerFactory.create(value));
+    },
+    [setController]
+  );
 
-    const iniTestCallback = useCallback(() => {
-      setSendData(JSON.stringify(sampleIniData, null, 2));
-      controller
-        ?.init(sampleIniData)
-        .then((r) => setResponse(JSON.stringify(r, null, 2)))
-        .catch((e) => setResponse(e.message));
-    }, [controller, setResponse]);
+  const iniTestCallback = useCallback(() => {
+    setSendData(JSON.stringify(sampleIniData, null, 2));
+    controller
+      ?.init(sampleIniData)
+      .then((r) => setResponse(JSON.stringify(r, null, 2)))
+      .catch((e) => setResponse(e.message));
+  }, [controller, setResponse]);
 
-    const stateTestCallback = useCallback(() => {
-      setSendData(JSON.stringify(sampleStateData, null, 2));
-      controller
-        ?.update(sampleStateData, 1)
-        .then((r) => setResponse(JSON.stringify(r, null, 2)))
-        .catch((e) => setResponse(e.message));
-    }, [controller, setResponse]);
+  const stateTestCallback = useCallback(() => {
+    setSendData(JSON.stringify(sampleStateData, null, 2));
+    controller
+      ?.update(sampleStateData, 1)
+      .then((r) => setResponse(JSON.stringify(r, null, 2)))
+      .catch((e) => setResponse(e.message));
+  }, [controller, setResponse]);
 
-    const endTestCallback = useCallback(() => {
-      setSendData(JSON.stringify(sampleStateData, null, 2));
-      controller
-        ?.end(sampleStateData, 1)
-        .then((r) => setResponse(JSON.stringify(r, null, 2)))
-        .catch((e) => setResponse(e.message));
-    }, [controller, setResponse]);
+  const endTestCallback = useCallback(() => {
+    setSendData(JSON.stringify(sampleStateData, null, 2));
+    controller
+      ?.end(sampleStateData, 1)
+      .then((r) => setResponse(JSON.stringify(r, null, 2)))
+      .catch((e) => setResponse(e.message));
+  }, [controller, setResponse]);
 
-    return (
-      <>
-        <Title>Controller Tester</Title>
+  return (
+    <>
+      <Title>Controller Tester</Title>
 
-        <Tabs defaultActiveKey="1">
-          <TabPane tab={RestControllerFactory.label} key="1">
-            <RestControllerFactory.Selector onChange={loaderCallback} />
-          </TabPane>
-        </Tabs>
-        <Space>
-          <Button onClick={iniTestCallback}>Test game initialise</Button>
-          <Button onClick={stateTestCallback}>Test game update</Button>
-          <Button onClick={endTestCallback}>Test game end</Button>
-        </Space>
+      <Tabs defaultActiveKey="1">
+        <TabPane tab={RestControllerFactory.label} key="1">
+          <RestControllerFactory.Selector onChange={loaderCallback} />
+        </TabPane>
+      </Tabs>
+      <Space>
+        <Button onClick={iniTestCallback}>Test game initialise</Button>
+        <Button onClick={stateTestCallback}>Test game update</Button>
+        <Button onClick={endTestCallback}>Test game end</Button>
+      </Space>
 
-        <Row gutter={16}>
-          <Col span={12}>
-            <Divider>Sent</Divider>
-            <Paragraph>{sendData && <pre>{sendData}</pre>}</Paragraph>
-          </Col>
-          <Col span={12}>
-            <Divider>Response</Divider>
-            <Paragraph>{response && <pre>{response}</pre>}</Paragraph>
-          </Col>
-        </Row>
-      </>
-    );
-  };
+      <Row gutter={16}>
+        <Col span={12}>
+          <Divider>Sent</Divider>
+          <Paragraph>{sendData && <pre>{sendData}</pre>}</Paragraph>
+        </Col>
+        <Col span={12}>
+          <Divider>Response</Divider>
+          <Paragraph>{response && <pre>{response}</pre>}</Paragraph>
+        </Col>
+      </Row>
+    </>
+  );
+};

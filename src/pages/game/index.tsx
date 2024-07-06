@@ -1,16 +1,7 @@
-import {
-    Steps,
-    Typography
-} from "antd";
-import React, {
-    useCallback,
-    useState
-} from "react";
+import { Steps, Typography } from "antd";
+import React, { useCallback, useState } from "react";
 import { Controller } from "../../controller/types";
-import {
-    GameHistory,
-    GameOptions
-} from "../../engine/types";
+import { GameHistory, GameOptions } from "../../engine/types";
 import { ControllerCreator } from "./ControllerCreator";
 import { Run } from "./Run";
 import { GameSetup } from "./Setup";
@@ -28,7 +19,7 @@ enum SetupStage {
   SUMMARY,
 }
 
-export const GameRunner: React.FunctionComponent<GamePageProps> = () => {
+export const GameRunner: React.FC<GamePageProps> = () => {
   const [currentStage, setCurrentStage] = useState(
     SetupStage.CONTROLLER_CREATOR
   );
